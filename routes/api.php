@@ -21,6 +21,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MilkingController;
 use App\Http\Controllers\MilkingTypeController;
 use App\Http\Controllers\NewbornTypeController;
+use App\Http\Controllers\OutcomeController;
 use App\Http\Controllers\OutcomeTypeController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\ProductMovementTypeController;
@@ -61,6 +62,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('milkings', MilkingController::class);
     Route::apiResource('livestock', LivestockController::class);
     Route::apiResource('newborn-types', NewbornTypeController::class);
+    Route::apiResource('outcomes', OutcomeController::class);
     Route::apiResource('outcome-types', OutcomeTypeController::class);
     Route::apiResource('owners', OwnerController::class);
     Route::apiResource('product-movement-types', ProductMovementTypeController::class);

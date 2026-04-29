@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['made_at', 'outcome_type_id', 'livestock_id'])]
 class Outcome extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     protected function casts(): array
     {
