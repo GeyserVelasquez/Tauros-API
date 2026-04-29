@@ -88,12 +88,6 @@ class LookUpTablesSeeder extends Seeder
                 ['code' => 'TOOL', 'name' => 'Herramienta'],
                 ['code' => 'VACCINE', 'name' => 'Vacuna'],
             ],
-            Result::class => [
-                ['code' => 'POSITIVE', 'name' => 'Positivo'],
-                ['code' => 'NEGATIVE', 'name' => 'Negativo'],
-                ['code' => 'PENDING', 'name' => 'Pendiente'],
-                ['code' => 'UNKNOWN', 'name' => 'Desconocido'],
-            ],
             RevisionType::class => [
                 ['code' => 'GENERAL', 'name' => 'General'],
                 ['code' => 'REPRODUCTIVE', 'name' => 'Reproductiva'],

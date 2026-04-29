@@ -31,8 +31,8 @@ class InventorySeeder extends Seeder
         $supplyType = SupplyType::where('code', 'MEDICINE')->first();
 
         $supplies = [
-            ['code' => 'OXIT-500', 'name' => 'Oxitetraciclina 500mg', 'quantity' => 100, 'supply_type_id' => $supplyType->id],
-            ['code' => 'IVEM-1', 'name' => 'Ivermectina 1%', 'quantity' => 50, 'supply_type_id' => $supplyType->id],
+            ['code' => 'OXIT-500', 'name' => 'Oxitetraciclina 500mg', 'supply_type_id' => $supplyType->id],
+            ['code' => 'IVEM-1', 'name' => 'Ivermectina 1%', 'supply_type_id' => $supplyType->id],
         ];
 
         foreach ($supplies as $supply) {

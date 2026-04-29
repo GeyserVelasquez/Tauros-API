@@ -113,7 +113,7 @@ class TechniqueTest extends TestCase
         $response->assertStatus(201);
 
         $this->assertDatabaseHas('techniques', [
-            'code' => 'T1'
+            'code' => $payload['code']
         ]);
     }
 
