@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['mother_id', 'birth_date', 'postbirth_revision_date','birth_type_id', 'technique_id'])]
+#[Fillable(['mother_id', 'birth_date', 'postbirth_revision_date','birth_type_id', 'technician_id'])]
 class Birth extends Model
 {
     use SoftDeletes;
@@ -33,9 +33,9 @@ class Birth extends Model
         return $this->belongsTo(BirthType::class);
     }
 
-    public function technique(): BelongsTo
+    public function technician(): BelongsTo
     {
-        return $this->belongsTo(Technique::class);
+        return $this->belongsTo(Technician::class);
     }
 
     public function newborns(): HasMany

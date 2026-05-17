@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\Abort;
 use App\Models\AbortType;
 use App\Models\Livestock;
-use App\Models\Technique;
+use App\Models\Technician;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,7 +22,7 @@ class AbortFactory extends Factory
     {
         return [
             'livestock_id' => Livestock::factory(),
-            'technique_id' => Technique::factory(),
+            'technician_id' => Technician::factory(),
             'abort_type_id' => AbortType::factory(),
             'made_at' => $this->faker->date(),
         ];

@@ -24,7 +24,7 @@ class AbortTest extends TestCase
                 '*' => [
                     'id',
                     'livestock_id',
-                    'technique_id',
+                    'technician_id',
                     'made_at',
                     'abort_type_id',
                 ]
@@ -45,7 +45,7 @@ class AbortTest extends TestCase
 
         $response->assertJsonFragment([
             'livestock_id' => $abort->livestock_id,
-            'technique_id' => $abort->technique_id,
+            'technician_id' => $abort->technician_id,
             'made_at' => $abort->made_at->format('Y-m-d'),
             'abort_type_id' => $abort->abort_type_id,
         ]);
@@ -54,7 +54,7 @@ class AbortTest extends TestCase
             'data' => [
                 'id',
                 'livestock_id',
-                'technique_id',
+                'technician_id',
                 'made_at',
                 'abort_type_id',
             ]
@@ -75,6 +75,29 @@ class AbortTest extends TestCase
         $this->assertDatabaseHas('aborts', [
             'livestock_id' => $payload['livestock_id'],
             'abort_type_id' => $payload['abort_type_id'],
+        ]);
+    }
+
+    public function test_users_can_create_a_new_abort_with_comment(): void
+    {
+        $payload = Abort::factory()->raw();
+        $payload['comment'] = "Test comment";
+
+        $route = route('aborts.store');
+
+        $response = $this->actingAs($this->user)
+            ->postJson($route, $payload);
+
+        $response->assertStatus(201);
+
+        $this->assertDatabaseHas('aborts', [
+            'livestock_id' => $payload['livestock_id'],
+            'abort_type_id' => $payload['abort_type_id'],
+        ]);
+
+        $this->assertDatabaseHas('comments', [
+            'text' => $payload['comment'],
+            'livestock_id' => $payload['livestock_id'],
         ]);
     }
 

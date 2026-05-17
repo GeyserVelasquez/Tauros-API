@@ -20,10 +20,10 @@ class RevisionResource extends JsonResource
             'made_at' => $this->made_at->format('Y-m-d'),
             'revision_result' => $this->revision_result,
             'revision_type_id' => $this->revision_type_id,
-            'technique_id' => $this->technique_id,
+            'technician_id' => $this->technician_id,
             'livestock' => new LivestockResource($this->whenLoaded('livestock')),
             'revision_type' => new RevisionTypeResource($this->whenLoaded('revisionType')),
-            'technique' => new TechniqueResource($this->whenLoaded('technique')),
+            'technician' => new TechnicianResource($this->whenLoaded('technician')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

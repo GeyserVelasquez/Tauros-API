@@ -9,7 +9,7 @@ use App\Models\Livestock;
 use App\Models\Revision;
 use App\Models\RevisionType;
 use App\Models\Teasing;
-use App\Models\Technique;
+use App\Models\Technician;
 use Illuminate\Database\Seeder;
 
 class LivestockEventSeeder extends Seeder
@@ -21,7 +21,7 @@ class LivestockEventSeeder extends Seeder
     {
         $livestock = Livestock::first();
         $batch = Batch::first();
-        $technique = Technique::first();
+        $technician = Technician::first();
         $revisionType = RevisionType::where('code', 'GENERAL')->first();
 
         BatchMovement::create([
@@ -36,12 +36,12 @@ class LivestockEventSeeder extends Seeder
             'made_at' => now(),
             'revision_result' => RevisionResult::PREGNANT,
             'revision_type_id' => $revisionType->id,
-            'technique_id' => $technique->id,
+            'technician_id' => $technician->id,
         ]);
 
         Teasing::create([
             'livestock_id' => $livestock->id,
-            'technique_id' => $technique->id,
+            'technician_id' => $technician->id,
             'detected_at' => now(),
         ]);
     }

@@ -32,7 +32,7 @@ class StoreLivestockRequest extends FormRequest
             'color_id' => ['nullable', 'exists:colors,id'],
             'classification_id' => ['nullable', 'exists:classifications,id'],
             'owner_id' => ['nullable', 'exists:owners,id'],
-            'technique_id' => ['nullable', 'exists:techniques,id'],
+            'technician_id' => ['nullable', 'exists:technicians,id'],
             'father_id' => ['nullable', 'exists:livestock,id'],
             'mother_id' => ['nullable', 'exists:livestock,id'],
             'adoptive_mother_id' => ['nullable', 'exists:livestock,id'],

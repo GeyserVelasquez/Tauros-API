@@ -57,7 +57,7 @@ class LivestockTest extends TestCase
                     'color_id',
                     'classification_id',
                     'owner_id',
-                    'technique_id',
+                    'technician_id',
                     'father_id',
                     'mother_id',
                     'adoptive_mother_id',
@@ -102,7 +102,7 @@ class LivestockTest extends TestCase
                 'color_id',
                 'classification_id',
                 'owner_id',
-                'technique_id',
+                'technician_id',
                 'father_id',
                 'mother_id',
                 'adoptive_mother_id',
@@ -282,6 +282,18 @@ class LivestockTest extends TestCase
         $this->assertDatabaseMissing('livestock', [
             'name' => 'Juanito Paisano'
         ]);
+    }
+
+    public function test_users_can_add_a_comment_to_a_livestock(): void
+    {
+        $livestock = Livestock::factory()->create();
+
+        $payload = [
+            'text' => 'La vaca mariposa tuvo un terné',
+        ];
+
+        $route = route('livestocks.store');
+
     }
 
 }

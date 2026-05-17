@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
     'brand_number', 'electronic_code', 'name', 'entry_date', 'birth_date',
     'general_comment', 'tits', 'is_enabled', 'is_alive', 'entry_cause_id',
     'state_id', 'animal_category', 'breed_id', 'color_id', 'classification_id',
-    'owner_id', 'technique_id', 'father_id', 'mother_id',
+    'owner_id', 'technician_id', 'father_id', 'mother_id',
     'adoptive_mother_id', 'receiving_mother_id'
 ])]
 #[ObservedBy([LivestockObserver::class])]
@@ -32,7 +32,7 @@ class Livestock extends Model
 
     protected array $allowIncludes = [
         'entryCause', 'state', 'breed', 'color', 'classification', 'owner',
-        'technique', 'batch', 'father', 'mother', 'adoptiveMother',
+        'technician', 'batch', 'father', 'mother', 'adoptiveMother',
         'receivingMother', 'currentBatchMovement'
     ];
 
@@ -77,9 +77,9 @@ class Livestock extends Model
         return $this->belongsTo(Owner::class);
     }
 
-    public function technique(): BelongsTo
+    public function technician(): BelongsTo
     {
-        return $this->belongsTo(Technique::class);
+        return $this->belongsTo(Technician::class);
     }
 
     public function batch(): BelongsTo

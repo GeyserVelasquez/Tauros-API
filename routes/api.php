@@ -38,7 +38,7 @@ use App\Http\Controllers\SupplyController;
 use App\Http\Controllers\SupplyMovementController;
 use App\Http\Controllers\SupplyTypeController;
 use App\Http\Controllers\TeasingController;
-use App\Http\Controllers\TechniqueController;
+use App\Http\Controllers\TechnicianController;
 
 require __DIR__.'/auth.php';
 
@@ -82,7 +82,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('supplies', SupplyController::class);
     Route::apiResource('supply-movements', SupplyMovementController::class);
     Route::apiResource('supply-types', SupplyTypeController::class);
-    Route::apiResource('techniques', TechniqueController::class);
+    Route::apiResource('technicians', TechnicianController::class);
     Route::apiResource('teasings', TeasingController::class);
 
 });

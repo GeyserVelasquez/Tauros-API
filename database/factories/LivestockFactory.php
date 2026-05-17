@@ -11,7 +11,7 @@ use App\Models\EntryCause;
 use App\Models\Livestock;
 use App\Models\Owner;
 use App\Models\State;
-use App\Models\Technique;
+use App\Models\Technician;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
 
@@ -50,7 +50,7 @@ class LivestockFactory extends Factory
             'color_id' => Color::factory(),
             'classification_id' => Classification::factory(),
             'owner_id' => Owner::factory(),
-            'technique_id' => Technique::factory(),
+            'technician_id' => Technician::factory(),
             'father_id' => null,
             'mother_id' => null,
             'adoptive_mother_id' => null,

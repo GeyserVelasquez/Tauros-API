@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Technique;
+namespace App\Http\Requests\Technician;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreTechniqueRequest extends FormRequest
+class UpdateTechnicianRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,20 +15,22 @@ class StoreTechniqueRequest extends FormRequest
      */
     public function rules(): array
     {
+        $technician = $this->route('technician');
+
         return [
             'code' => [
-                'required',
+                'required_without_all:name,telephone',
                 'string',
                 'max:255',
-                Rule::unique('techniques', 'code')
+                Rule::unique('technicians', 'code')->ignore($technician)
             ],
             'name' => [
-                'required',
+                'required_without_all:code,telephone',
                 'string',
                 'max:255'
             ],
             'telephone' => [
-                'nullable',
+                'required_without_all:code,name',
                 'string',
                 'max:255'
             ],

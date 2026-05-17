@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\Livestock;
 use App\Models\Milking;
 use App\Models\MilkingType;
-use App\Models\Technique;
+use App\Models\Technician;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -25,7 +25,7 @@ class MilkingFactory extends Factory
         return [
             'livestock_id' => Livestock::factory(),
             'milking_type_id' => MilkingType::factory(),
-            'technique_id' => Technique::factory(),
+            'technician_id' => Technician::factory(),
             'made_at' => $this->faker->date(),
             'first_weight' => $this->faker->randomFloat(2, 5, 20),
             'second_weight' => $this->faker->randomFloat(2, 5, 20),

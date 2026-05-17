@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['code', 'name', 'telephone'])]
-class Technique extends Model
+class Technician extends Model
 {
     use SoftDeletes, HasFactory;
 

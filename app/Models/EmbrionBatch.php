@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-#[Fillable(['code', 'name', 'mother_id', 'father_id', 'technique_id'])]
+#[Fillable(['code', 'name', 'mother_id', 'father_id', 'technician_id'])]
 class EmbrionBatch extends Model
 {
     use SoftDeletes;
@@ -34,9 +34,9 @@ class EmbrionBatch extends Model
         return $this->belongsTo(Livestock::class, 'father_id');
     }
 
-    public function technique(): BelongsTo
+    public function technician(): BelongsTo
     {
-        return $this->belongsTo(Technique::class);
+        return $this->belongsTo(Technician::class);
     }
 
     public function products(): MorphMany

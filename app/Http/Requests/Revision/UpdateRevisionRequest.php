@@ -20,7 +20,7 @@ class UpdateRevisionRequest extends FormRequest
             'made_at' => ['sometimes', 'required', 'date'],
             'revision_result' => ['sometimes', 'required', Rule::Enum(RevisionResult::class)],
             'revision_type_id' => ['sometimes', 'required', 'exists:revision_types,id'],
-            'technique_id' => ['nullable', 'exists:techniques,id'],
+            'technician_id' => ['nullable', 'exists:technicians,id'],
         ];
     }
 }

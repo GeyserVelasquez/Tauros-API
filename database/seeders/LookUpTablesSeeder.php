@@ -22,7 +22,7 @@ use App\Models\RevisionType;
 use App\Models\ServiceType;
 use App\Models\State;
 use App\Models\SupplyType;
-use App\Models\Technique;
+use App\Models\Technician;
 use Illuminate\Database\Seeder;
 
 class LookUpTablesSeeder extends Seeder
@@ -134,7 +134,7 @@ class LookUpTablesSeeder extends Seeder
                 ['code' => 'NORTH', 'name' => 'Hato Norte'],
                 ['code' => 'SOUTH', 'name' => 'Hato Sur'],
             ],
-            Technique::class => [
+            Technician::class => [
                 ['code' => 'V-14789456', 'name' => 'Técnico Principal', 'telephone' => '+584123456789'],
                 ['code' => 'V-28124536', 'name' => 'Veterinario Senior', 'telephone' => '+584227558955'],
             ],

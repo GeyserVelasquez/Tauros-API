@@ -17,7 +17,7 @@ return new class extends Migration
             $table->date('birth_date');
             $table->date('postbirth_revision_date');
             $table->foreignId('birth_type_id')->constrained();
-            $table->foreignId('technique_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('technician_id')->nullable()->constrained()->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();
 

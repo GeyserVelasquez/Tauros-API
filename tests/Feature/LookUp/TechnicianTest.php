@@ -2,20 +2,20 @@
 
 namespace Tests\Feature\LookUp;
 
-use App\Models\Technique;
+use App\Models\Technician;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class TechniqueTest extends TestCase
+class TechnicianTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_users_can_get_a_list_of_techniques(): void
+    public function test_users_can_get_a_list_of_technicians(): void
     {
-        Technique::factory(3)->create();
+        Technician::factory(3)->create();
 
-        $route = route('techniques.index');
+        $route = route('technicians.index');
 
         $response = $this->actingAs($this->user)
             ->getJson($route);
@@ -36,15 +36,15 @@ class TechniqueTest extends TestCase
         ]);
     }
 
-    public function test_unauthenticated_users_cannot_access_techniques_endpoints(): void
+    public function test_unauthenticated_users_cannot_access_technicians_endpoints(): void
     {
-        $technique = Technique::factory()->create();
+        $technician = Technician::factory()->create();
 
-        $routeIndex = route('techniques.index');
+        $routeIndex = route('technicians.index');
         $responseIndex = $this->getJson($routeIndex);
         $responseIndex->assertStatus(401);
 
-        $routeShow = route('techniques.show', $technique);
+        $routeShow = route('technicians.show', $technician);
         $responseShow = $this->getJson($routeShow);
         $responseShow->assertStatus(401);
 
@@ -52,33 +52,33 @@ class TechniqueTest extends TestCase
             'code' => 'sh',
             'name' => 'showTest'
         ];
-        $routeStore = route('techniques.store');
+        $routeStore = route('technicians.store');
         $responseStore = $this->postJson($routeStore, $storePayload);
         $responseStore->assertStatus(401);
-        $this->assertDatabaseMissing('techniques', [
+        $this->assertDatabaseMissing('technicians', [
             'code' => 'sh'
         ]);
 
         $updatePayload = [
             'name' => 'test'
         ];
-        $routeUpdate = route('techniques.update', $technique);
+        $routeUpdate = route('technicians.update', $technician);
         $responseUpdate = $this->putJson($routeUpdate, $updatePayload);
         $responseUpdate->assertStatus(401);
 
-        $routeDestroy = route('techniques.destroy', $technique);
+        $routeDestroy = route('technicians.destroy', $technician);
         $responseDestroy = $this->deleteJson($routeDestroy);
         $responseDestroy->assertStatus(401);
-        $this->assertDatabaseMissing('techniques', [
+        $this->assertDatabaseMissing('technicians', [
             'name' => 'test'
         ]);
     }
 
-    public function test_users_can_get_a_single_technique(): void
+    public function test_users_can_get_a_single_technician(): void
     {
-        $technique = Technique::factory()->create();
+        $technician = Technician::factory()->create();
 
-        $route = route('techniques.show', $technique);
+        $route = route('technicians.show', $technician);
 
         $response = $this->actingAs($this->user)
             ->getJson($route);
@@ -86,9 +86,9 @@ class TechniqueTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertJsonFragment([
-            'code' => $technique->code,
-            'name' => $technique->name,
-            'telephone' => $technique->telephone,
+            'code' => $technician->code,
+            'name' => $technician->name,
+            'telephone' => $technician->telephone,
         ]);
 
         $response->assertJsonStructure([
@@ -101,50 +101,50 @@ class TechniqueTest extends TestCase
         ]);
     }
 
-    public function test_users_can_create_a_new_technique(): void
+    public function test_users_can_create_a_new_technician(): void
     {
-        $payload = Technique::factory()->raw();
+        $payload = Technician::factory()->raw();
 
-        $route = route('techniques.store');
+        $route = route('technicians.store');
 
         $response = $this->actingAs($this->user)
              ->postJson($route, $payload);
 
         $response->assertStatus(201);
 
-        $this->assertDatabaseHas('techniques', [
+        $this->assertDatabaseHas('technicians', [
             'code' => $payload['code']
         ]);
     }
 
-    public function test_users_cannot_create_a_new_technique_with_missing_parameters(): void
+    public function test_users_cannot_create_a_new_technician_with_missing_parameters(): void
     {
         $payload = [
-            'name' => 'Technique One'
+            'name' => 'Technician One'
         ];
 
-        $route = route('techniques.store');
+        $route = route('technicians.store');
 
         $response = $this->actingAs($this->user)
              ->postJson($route, $payload);
 
         $response->assertStatus(422);
 
-        $this->assertDatabaseMissing('techniques', [
-            'name' => 'Technique One'
+        $this->assertDatabaseMissing('technicians', [
+            'name' => 'Technician One'
         ]);
     }
 
-    public function test_users_cannot_create_a_technique_with_a_duplicated_code(): void
+    public function test_users_cannot_create_a_technician_with_a_duplicated_code(): void
     {
-        $technique = Technique::factory()->create();
+        $technician = Technician::factory()->create();
 
         $payload = [
-            'code' => $technique->code,
-            'name' => 'Technique Duplicated'
+            'code' => $technician->code,
+            'name' => 'Technician Duplicated'
         ];
 
-        $route = route('techniques.store');
+        $route = route('technicians.store');
 
         $response = $this->actingAs($this->user)
             ->postJson($route, $payload);
@@ -154,31 +154,31 @@ class TechniqueTest extends TestCase
         $response->assertJsonValidationErrors(['code']);
     }
 
-    public function test_users_can_update_a_technique(): void
+    public function test_users_can_update_a_technician(): void
     {
-        $technique = Technique::factory()->create();
+        $technician = Technician::factory()->create();
 
-        $payload = Technique::factory()->raw();
+        $payload = Technician::factory()->raw();
 
-        $route = route('techniques.update', $technique);
+        $route = route('technicians.update', $technician);
 
         $response = $this->actingAs($this->user)
             ->putJson($route, $payload);
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseHas('techniques', [
+        $this->assertDatabaseHas('technicians', [
             'code' => $payload['code']
         ]);
     }
 
-    public function test_users_cannot_update_a_technique_with_missing_parameters(): void
+    public function test_users_cannot_update_a_technician_with_missing_parameters(): void
     {
-        $technique = Technique::factory()->create();
+        $technician = Technician::factory()->create();
 
         $payload = [];
 
-        $route = route('techniques.update', $technique);
+        $route = route('technicians.update', $technician);
 
         $response = $this->actingAs($this->user)
             ->putJson($route, $payload);
@@ -186,27 +186,27 @@ class TechniqueTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_users_can_delete_a_technique(): void
+    public function test_users_can_delete_a_technician(): void
     {
-        $technique = Technique::factory()->create();
+        $technician = Technician::factory()->create();
 
-        $route = route('techniques.destroy', $technique);
+        $route = route('technicians.destroy', $technician);
 
         $response = $this->actingAs($this->user)
             ->deleteJson($route);
 
         $response->assertStatus(204);
 
-        $this->assertSoftDeleted($technique);
+        $this->assertSoftDeleted($technician);
     }
 
-    public function test_users_cannot_get_a_soft_deleted_technique(): void
+    public function test_users_cannot_get_a_soft_deleted_technician(): void
     {
-        $technique = Technique::factory()->create();
+        $technician = Technician::factory()->create();
 
-        $technique->delete();
+        $technician->delete();
 
-        $route = route('techniques.show', $technique);
+        $route = route('technicians.show', $technician);
 
         $response = $this->actingAs($this->user)
             ->getJson($route);

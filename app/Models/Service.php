@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-#[Fillable(['female_id', 'parentable_type', 'parentable_id', 'technique_id', 'service_type_id', 'made_at'])]
+#[Fillable(['female_id', 'parentable_type', 'parentable_id', 'technician_id', 'service_type_id', 'made_at'])]
 class Service extends Model
 {
     use SoftDeletes;
@@ -32,9 +32,9 @@ class Service extends Model
         return $this->morphTo();
     }
 
-    public function technique(): BelongsTo
+    public function technician(): BelongsTo
     {
-        return $this->belongsTo(Technique::class);
+        return $this->belongsTo(Technician::class);
     }
 
     public function serviceType(): BelongsTo

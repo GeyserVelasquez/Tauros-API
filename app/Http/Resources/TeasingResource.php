@@ -17,10 +17,10 @@ class TeasingResource extends JsonResource
         return [
             'id' => $this->id,
             'livestock_id' => $this->livestock_id,
-            'technique_id' => $this->technique_id,
+            'technician_id' => $this->technician_id,
             'detected_at' => $this->detected_at->format('Y-m-d'),
             'livestock' => new LivestockResource($this->whenLoaded('livestock')),
-            'technique' => new TechniqueResource($this->whenLoaded('technique')),
+            'technician' => new TechnicianResource($this->whenLoaded('technician')),
         ];
     }
 }

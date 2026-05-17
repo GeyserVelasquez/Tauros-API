@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->json('attributes')->nullable();
             $table->foreignId('livestock_id')->constrained('livestock');
-            $table->foreignId('technique_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('technician_id')->nullable()->constrained()->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

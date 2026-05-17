@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('milkings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('livestock_id')->constrained('livestock');
-            $table->foreignId('technique_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('technician_id')->nullable()->constrained()->nullOnDelete();
             $table->date('made_at');
             $table->foreignId('milking_type_id')->constrained();
             $table->decimal('first_weight');
