@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('text');
             $table->foreignId('livestock_id')->constrained('livestock');
-            $table->morphs('commentable');
+            $table->nullableMorphs('commentable');
             $table->softDeletes();
             $table->timestamps();
         });
