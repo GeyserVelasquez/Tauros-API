@@ -27,7 +27,7 @@ class AbortController extends Controller
     {
         $data = $request->validated();
 
-        $abort = Abort::create($data);
+        $abort = Abort::register($data);
 
         return new AbortResource($abort);
     }
@@ -47,7 +47,7 @@ class AbortController extends Controller
     {
         $data = $request->validated();
 
-        $abort->update($data);
+        $abort->amend($data);
 
         return new AbortResource($abort);
     }

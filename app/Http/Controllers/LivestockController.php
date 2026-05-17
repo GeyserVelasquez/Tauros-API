@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Breed\UpdateBreedRequest;
 use App\Http\Requests\Livestock\StoreLivestockRequest;
 use App\Http\Requests\Livestock\UpdateLivestockRequest;
 use App\Http\Resources\LivestockResource;

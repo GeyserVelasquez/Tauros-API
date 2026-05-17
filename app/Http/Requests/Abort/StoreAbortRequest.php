@@ -17,6 +17,7 @@ class StoreAbortRequest extends FormRequest
             'livestock_id' => ['required', 'exists:livestock,id'],
             'made_at' => ['required', 'date'],
             'abort_type_id' => ['required', 'exists:abort_types,id'],
+            'comment' => ['nullable', 'string'],
         ];
     }
 }
