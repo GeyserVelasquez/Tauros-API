@@ -13,9 +13,7 @@ use App\Enums\MovementType;
 #[Fillable(['supply_id', 'type', 'made_at', 'attributes'])]
 class SupplyMovement extends Model
 {
-    use SoftDeletes;
-
-
+    use SoftDeletes, HasFactory;
 
     protected function casts(): array
     {
