@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 #[Fillable(['certificate_number', 'issue_date', 'expiry_date', 'file_path'])]
 class Certificate extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     protected function casts(): array
     {
