@@ -21,7 +21,7 @@ class AbortResource extends JsonResource
             'made_at' => $this->made_at->format('Y-m-d'),
             'abort_type_id' => $this->abort_type_id,
             'livestock' => new LivestockResource($this->whenLoaded('livestock')),
-            'abort_type' => new MilkingTypeResource($this->whenLoaded('abortType')),
+            'abort_type' => new AbortTypeResource($this->whenLoaded('abortType')),
             'technician' => new TechnicianResource($this->whenLoaded('technician')),
         ];
     }
