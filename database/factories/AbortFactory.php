@@ -27,4 +27,9 @@ class AbortFactory extends Factory
             'made_at' => $this->faker->date(),
         ];
     }
+
+    public function withComment(?string $text = null): static
+    {
+        return $this->afterCreating(fn (Abort $abort) => $abort->syncComment($text ?? fake()->sentence()));
+    }
 }

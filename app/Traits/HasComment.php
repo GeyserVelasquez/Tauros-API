@@ -28,7 +28,6 @@ trait HasComment
         return DB::transaction(fn () => $this->executeAmendment($payload, $text));
     }
 
-
     private static function executeRegistration(array $payload, ?string $text): static
     {
         $model = static::create($payload);
@@ -47,7 +46,7 @@ trait HasComment
 
     protected function syncComment(?string $text): void
     {
-        if (empty($text)) {
+        if (empty($text) || containsBadWords($text)) {
             $this->comment()->delete();
             return;
         }

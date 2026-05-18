@@ -15,8 +15,6 @@ class Abort extends Model
 {
     use SoftDeletes, HasFactory, HasComment;
 
-
-
     protected function casts(): array
     {
         return [

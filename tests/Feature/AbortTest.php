@@ -78,29 +78,6 @@ class AbortTest extends TestCase
         ]);
     }
 
-    public function test_users_can_create_a_new_abort_with_comment(): void
-    {
-        $payload = Abort::factory()->raw();
-        $payload['comment'] = "Test comment";
-
-        $route = route('aborts.store');
-
-        $response = $this->actingAs($this->user)
-            ->postJson($route, $payload);
-
-        $response->assertStatus(201);
-
-        $this->assertDatabaseHas('aborts', [
-            'livestock_id' => $payload['livestock_id'],
-            'abort_type_id' => $payload['abort_type_id'],
-        ]);
-
-        $this->assertDatabaseHas('comments', [
-            'text' => $payload['comment'],
-            'livestock_id' => $payload['livestock_id'],
-        ]);
-    }
-
     public function test_users_cannot_create_a_new_abort_with_missing_parameters(): void
     {
         $payload = ['made_at' => now()->format('Y-m-d')];
@@ -159,4 +136,83 @@ class AbortTest extends TestCase
 
         $response->assertStatus(404);
     }
+
+    public function test_users_can_create_an_abort_comment(): void
+    {
+        $payload = Abort::factory()->raw();
+        $payload['comment'] = 'Test comment';
+
+        $route = route('aborts.store');
+
+        $response = $this->actingAs($this->user)
+            ->postJson($route, $payload);
+
+        $response->assertStatus(201);
+
+        $abortId = $response->json('data.id');
+        $abortMorphClass = (new Abort)->getMorphClass();
+
+        $this->assertDatabaseHas('aborts', [
+            'id' => $abortId,
+            'livestock_id' => $payload['livestock_id'],
+            'abort_type_id' => $payload['abort_type_id'],
+        ]);
+
+        $this->assertDatabaseHas('comments', [
+            'commentable_id' => $abortId,
+            'commentable_type' => $abortMorphClass,
+            'text' => $payload['comment'],
+            'livestock_id' => $payload['livestock_id'],
+        ]);
+    }
+
+    public function test_users_can_update_an_abort_comment(): void
+    {
+        $oldComment = 'Old Comment';
+        $abort = Abort::factory()->withComment($oldComment)->create();
+
+        $this->assertDatabaseHas('comments', [
+            'commentable_id' => $abort->id,
+            'commentable_type' => $abort->getMorphClass(),
+            'text' => $oldComment
+        ]);
+
+        $payload = [
+            'comment' => 'New Comment'
+        ];
+
+        $route = route('aborts.update', $abort);
+
+        $response = $this->actingAs($this->user)
+            ->putJson($route, $payload);
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('comments', [
+            'commentable_id' => $abort->id,
+            'commentable_type' => $abort->getMorphClass(),
+            'text' => $payload['comment'],
+            'livestock_id' => $abort->livestock_id
+        ]);
+
+        $this->assertDatabaseMissing('comments', [
+            'text' => $oldComment
+        ]);
+    }
+
+    public function test_users_can_remove_an_abort_comment(): void
+    {
+        $abort = Abort::factory()->withComment()->create();
+
+        $response = $this->actingAs($this->user)
+            ->putJson(route('aborts.update', $abort), ['comment' => null]);
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseMissing('comments', [
+            'commentable_id' => $abort->id,
+            'commentable_type' => Abort::class
+        ]);
+    }
+
 }
