@@ -15,12 +15,12 @@ class LivestockController extends Controller
      */
     public function index(Request $request)
     {
-        $livestock = Livestock::included(
-            $request->query('include'))
+        $includedRelationships = $request->query('include');
+
+        $livestock = Livestock::included($includedRelationships)
             ->paginate(15)
             ->withQueryString();
 
-        // (Mantengo tu toResourceCollection() que vi que tienes implementado)
         return $livestock->toResourceCollection();
     }
 

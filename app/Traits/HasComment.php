@@ -44,7 +44,7 @@ trait HasComment
         return $updated;
     }
 
-    protected function syncComment(?string $text): void
+    public function syncComment(?string $text): void
     {
         if (empty($text) || containsBadWords($text)) {
             $this->comment()->delete();
