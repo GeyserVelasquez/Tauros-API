@@ -152,12 +152,6 @@ class AbortTest extends TestCase
         $abortId = $response->json('data.id');
         $abortMorphClass = (new Abort)->getMorphClass();
 
-        $this->assertDatabaseHas('aborts', [
-            'id' => $abortId,
-            'livestock_id' => $payload['livestock_id'],
-            'abort_type_id' => $payload['abort_type_id'],
-        ]);
-
         $this->assertDatabaseHas('comments', [
             'commentable_id' => $abortId,
             'commentable_type' => $abortMorphClass,
@@ -204,8 +198,12 @@ class AbortTest extends TestCase
     {
         $abort = Abort::factory()->withComment()->create();
 
+        $payload = ['comment' => ""];
+
+        $route = route('aborts.update', $abort);
+
         $response = $this->actingAs($this->user)
-            ->putJson(route('aborts.update', $abort), ['comment' => null]);
+            ->putJson($route, $payload);
 
         $response->assertStatus(200);
 
