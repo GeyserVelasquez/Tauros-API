@@ -7,7 +7,6 @@ use Tests\TestCase;
 
 class LivestockTest extends TestCase
 {
-
     /**
      * A basic feature test example.
      */
@@ -67,6 +66,89 @@ class LivestockTest extends TestCase
         ]);
     }
 
+    public function test_users_can_get_a_list_of_livestock_with_includes(): void
+    {
+        $livestock = Livestock::factory(3)->create();
+        $includedRelationships = 'breed,classification,color,entryCause,owner,state,technician';
+
+        $route = route('livestock.index', [
+            'include' => $includedRelationships
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->getJson($route);
+
+        $response->assertStatus(200);
+        $response->assertJsonCount(3, 'data');
+
+        // Verificamos la estructura base + las relaciones incluidas
+        $response->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'id',
+                    'brand_number',
+                    'electronic_code',
+                    'name',
+                    'entry_date',
+                    'birth_date',
+                    'general_comment',
+                    'tits',
+                    'is_enabled',
+                    'is_alive',
+                    'entry_cause_id',
+                    'state_id',
+                    'animal_category',
+                    'breed_id',
+                    'color_id',
+                    'classification_id',
+                    'owner_id',
+                    'technician_id',
+                    'father_id',
+                    'mother_id',
+                    'adoptive_mother_id',
+                    'receiving_mother_id',
+                    'breed' => [
+                        'id',
+                        'code',
+                        'name',
+                    ],
+                    'owner' => [
+                        'id',
+                        'code',
+                        'name',
+                        'telephone',
+                    ],
+                    'color' => [
+                        'id',
+                        'code',
+                        'name',
+                    ],
+                    'classification' => [
+                        'id',
+                        'code',
+                        'name',
+                    ],
+                    'technician' => [
+                        'id',
+                        'code',
+                        'name',
+                        'telephone',
+                    ],
+                    'entry_cause' => [
+                        'id',
+                        'code',
+                        'name',
+                    ],
+                    'state' => [
+                        'id',
+                        'code',
+                        'name',
+                    ],
+                ]
+            ]
+        ]);
+    }
+
     public function test_users_can_get_a_single_livestock(): void
     {
         $livestock = Livestock::factory()->create();
@@ -111,6 +193,92 @@ class LivestockTest extends TestCase
         ]);
 
     }
+
+    public function test_users_can_get_a_single_livestock_with_includes(): void
+    {
+        $livestock = Livestock::factory()->create();
+        $includedRelationships = 'breed,classification,color,entryCause,owner,state,technician';
+
+        $route = route('livestock.show', [
+            'livestock' => $livestock,
+            'include' => $includedRelationships
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->getJson($route);
+
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'brand_number' => $livestock->brand_number,
+            'electronic_code' => $livestock->electronic_code,
+        ]);
+
+        $response->assertJsonStructure([
+            'data' => [
+                'id',
+                'brand_number',
+                'electronic_code',
+                'name',
+                'entry_date',
+                'birth_date',
+                'general_comment',
+                'tits',
+                'is_enabled',
+                'is_alive',
+                'entry_cause_id',
+                'state_id',
+                'animal_category',
+                'breed_id',
+                'color_id',
+                'classification_id',
+                'owner_id',
+                'technician_id',
+                'father_id',
+                'mother_id',
+                'adoptive_mother_id',
+                'receiving_mother_id',
+
+                'breed' => [
+                    'id',
+                    'code',
+                    'name',
+                ],
+                'owner' => [
+                    'id',
+                    'code',
+                    'name',
+                    'telephone',
+                ],
+                'color' => [
+                    'id',
+                    'code',
+                    'name',
+                ],
+                'classification' => [
+                    'id',
+                    'code',
+                    'name',
+                ],
+                'technician' => [
+                    'id',
+                    'code',
+                    'name',
+                    'telephone',
+                ],
+                'entry_cause' => [
+                    'id',
+                    'code',
+                    'name',
+                ],
+                'state' => [
+                    'id',
+                    'code',
+                    'name',
+                ],
+            ]
+        ]);
+    }
+
 
     public function test_users_can_create_a_new_livestock(): void
     {
@@ -245,7 +413,7 @@ class LivestockTest extends TestCase
         ]);
     }
 
-    public function test_unauthenticated_users_cannot_access_breeds_endpoints(): void
+    public function test_unauthenticated_users_cannot_access_livestock_endpoints(): void
     {
         $livestock = Livestock::factory()->create();
 
@@ -268,7 +436,6 @@ class LivestockTest extends TestCase
             'name' => 'Juanito Alimaña'
         ]);
 
-
         $updatePayload = [
             'name' => 'Juanito Paisano'
         ];
@@ -282,18 +449,6 @@ class LivestockTest extends TestCase
         $this->assertDatabaseMissing('livestock', [
             'name' => 'Juanito Paisano'
         ]);
-    }
-
-    public function test_users_can_add_a_comment_to_a_livestock(): void
-    {
-        $livestock = Livestock::factory()->create();
-
-        $payload = [
-            'text' => 'La vaca mariposa tuvo un terné',
-        ];
-
-        $route = route('livestocks.store');
-
     }
 
 }
