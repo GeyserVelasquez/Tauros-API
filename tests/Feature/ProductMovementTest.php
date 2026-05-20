@@ -99,4 +99,18 @@ class ProductMovementTest extends TestCase
 
         $this->assertSoftDeleted($movement);
     }
+
+    public function test_users_cannot_get_a_soft_deleted_product_movement(): void
+    {
+        $movement = ProductMovement::factory()->create();
+
+        $movement->delete();
+
+        $route = route('product-movements.show', $movement);
+
+        $response = $this->actingAs($this->user)
+            ->getJson($route);
+
+        $response->assertStatus(404);
+    }
 }

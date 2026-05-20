@@ -121,4 +121,18 @@ class RevisionTest extends TestCase
 
         $this->assertSoftDeleted($revision);
     }
+
+    public function test_users_cannot_get_a_soft_deleted_revision(): void
+    {
+        $revision = Revision::factory()->create();
+
+        $revision->delete();
+
+        $route = route('revisions.show', $revision);
+
+        $response = $this->actingAs($this->user)
+            ->getJson($route);
+
+        $response->assertStatus(404);
+    }
 }
