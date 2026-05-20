@@ -10,17 +10,15 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-#[Fillable(['code', 'name', 'comment', 'livestock_id', 'technician_id'])]
+#[Fillable(['code', 'name', 'description', 'livestock_id', 'technician_id'])]
 class SemenBatch extends Model
 {
-    use SoftDeletes;
-
-
+    use SoftDeletes, HasFactory;
 
     protected function casts(): array
     {
         return [
-            'date' => 'datetime',
+            'created_at' => 'datetime',
         ];
     }
 
