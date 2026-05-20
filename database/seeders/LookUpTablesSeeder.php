@@ -15,9 +15,7 @@ use App\Models\Herd;
 use App\Models\MilkingType;
 use App\Models\NewbornType;
 use App\Models\OutcomeType;
-use App\Models\ProductMovementType;
 use App\Models\ProductType;
-use App\Models\Result;
 use App\Models\RevisionType;
 use App\Models\ServiceType;
 use App\Models\State;
@@ -76,11 +74,6 @@ class LookUpTablesSeeder extends Seeder
                 ['code' => 'MEAT', 'name' => 'Carne'],
                 ['code' => 'SEMEN', 'name' => 'Semen'],
                 ['code' => 'EMBRYO', 'name' => 'Embrión'],
-            ],
-            ProductMovementType::class => [
-                ['code' => 'IN', 'name' => 'Entrada'],
-                ['code' => 'OUT', 'name' => 'Salida'],
-                ['code' => 'ADJUST', 'name' => 'Ajuste'],
             ],
             SupplyType::class => [
                 ['code' => 'MEDICINE', 'name' => 'Medicamento'],
