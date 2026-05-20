@@ -7,16 +7,6 @@ use Tests\TestCase;
 
 class LivestockTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
-    public function test_example(): void
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
     public function test_users_can_get_a_list_of_livestock(): void
     {
 
@@ -81,7 +71,6 @@ class LivestockTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonCount(3, 'data');
 
-        // Verificamos la estructura base + las relaciones incluidas
         $response->assertJsonStructure([
             'data' => [
                 '*' => [
