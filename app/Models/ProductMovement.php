@@ -13,7 +13,7 @@ use App\Enums\MovementType;
 #[Fillable(['product_id', 'type', 'made_at', 'attributes'])]
 class ProductMovement extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     protected function casts(): array
     {

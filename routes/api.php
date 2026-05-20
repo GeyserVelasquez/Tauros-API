@@ -28,6 +28,8 @@ use App\Http\Controllers\NewbornTypeController;
 use App\Http\Controllers\OutcomeController;
 use App\Http\Controllers\OutcomeTypeController;
 use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductMovementController;
 use App\Http\Controllers\ProductMovementTypeController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\RevisionController;
@@ -73,6 +75,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('outcomes', OutcomeController::class);
     Route::apiResource('outcome-types', OutcomeTypeController::class);
     Route::apiResource('owners', OwnerController::class);
+    Route::apiResource('products', ProductController::class);
+    Route::apiResource('product-movements', ProductMovementController::class);
     Route::apiResource('product-movement-types', ProductMovementTypeController::class);
     Route::apiResource('product-types', ProductTypeController::class);
     Route::apiResource('revisions', RevisionController::class);
