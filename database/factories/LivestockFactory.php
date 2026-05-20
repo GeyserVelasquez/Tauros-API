@@ -112,10 +112,12 @@ class LivestockFactory extends Factory
     protected function generateParent(array $childAttributes, int $currentLevel): self
     {
         $childBirthdate = $childAttributes['birth_date'] ?? now();
+        $parentBirthDate = $this->generateParentBirthDate($childBirthdate);
 
         return static::new()
             ->state([
-                'birth_date' => $this->generateParentBirthDate($childBirthdate),
+                'birth_date' => $parentBirthDate,
+                'entry_date' => $this->faker->dateTimeBetween($parentBirthDate, 'now')->format('Y-m-d'),
             ])
             ->withPedigree($currentLevel - 1);
     }
