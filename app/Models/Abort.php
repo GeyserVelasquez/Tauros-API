@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasComment;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,12 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['made_at', 'abort_type_id', 'livestock_id', 'technique_id'])]
+#[Fillable(['made_at', 'abort_type_id', 'livestock_id', 'technician_id'])]
 class Abort extends Model
 {
-    use SoftDeletes, HasFactory;
-
-
+    use SoftDeletes, HasFactory, HasComment;
 
     protected function casts(): array
     {
@@ -33,9 +32,9 @@ class Abort extends Model
         return $this->belongsTo(Livestock::class);
     }
 
-    public function technique(): BelongsTo
+    public function technician(): BelongsTo
     {
-        return $this->belongsTo(Technique::class);
+        return $this->belongsTo(Technician::class);
     }
 
 }

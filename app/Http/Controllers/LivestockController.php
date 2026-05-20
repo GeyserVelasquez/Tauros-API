@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Breed\UpdateBreedRequest;
 use App\Http\Requests\Livestock\StoreLivestockRequest;
 use App\Http\Requests\Livestock\UpdateLivestockRequest;
 use App\Http\Resources\LivestockResource;
@@ -16,13 +15,13 @@ class LivestockController extends Controller
      */
     public function index(Request $request)
     {
-        $livestock = Livestock::included(
-            $request->query('include'))
+        $includedRelationships = $request->query('include');
+
+        $livestock = Livestock::withIncludes($includedRelationships)
             ->paginate(15)
             ->withQueryString();
 
-        // (Mantengo tu toResourceCollection() que vi que tienes implementado)
-        return $livestock->toResourceCollection();
+        return LivestockResource::collection($livestock);
     }
 
     /**
@@ -40,11 +39,12 @@ class LivestockController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request,Livestock $livestock): LivestockResource
+    public function show(Request $request, Livestock $livestock): LivestockResource
     {
         $livestock->loadIncludes($request->query('include'));
 
-        return new LivestockResource($livestock);    }
+        return new LivestockResource($livestock);
+    }
 
     /**
      * Update the specified resource in storage.

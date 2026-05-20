@@ -2,35 +2,20 @@
 
 namespace App\Traits;
 
+use App\Attributes\Includable;
 use Illuminate\Database\Eloquent\Builder;
+use ReflectionClass;
 
 trait HasInclude
 {
-    protected function parseIncludes(?string $includes): array
-    {
-        if (empty($includes) || !property_exists($this, 'allowIncludes')) {
-            return [];
-        }
 
-        $requested = explode(',', $includes);
-
-        return array_intersect($requested, $this->allowIncludes);
-    }
-
-    /**
-     * Scope para cargar relaciones dinámicas.
-     * Ahora RECIBE el string, no va a buscarlo al Request.
-     */
-    public function scopeIncluded(Builder $query, ?string $includes): Builder
+    public function scopeWithIncludes(Builder $query, ?string $includes): Builder
     {
         $validIncludes = $this->parseIncludes($includes);
 
         return empty($validIncludes) ? $query : $query->with($validIncludes);
     }
 
-    /**
-     * Cargar relaciones dinámicas en una instancia existente.
-     */
     public function loadIncludes(?string $includes): self
     {
         $validIncludes = $this->parseIncludes($includes);
@@ -40,5 +25,25 @@ trait HasInclude
         }
 
         return $this;
+    }
+
+    protected function parseIncludes(?string $includes): array
+    {
+        if (empty($includes)) {
+            return [];
+        }
+
+        $reflection = new ReflectionClass($this);
+        $attributes = $reflection->getAttributes(Includable::class);
+
+        if (empty($attributes)) {
+            return [];
+        }
+
+        $allowedIncludes = $attributes[0]->newInstance()->includes;
+
+        $requested = explode(',', $includes);
+
+        return array_intersect($requested, $allowedIncludes);
     }
 }

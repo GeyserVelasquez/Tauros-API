@@ -17,14 +17,14 @@ class MilkingResource extends JsonResource
         return [
             'id' => $this->id,
             'livestock_id' => $this->livestock_id,
-            'technique_id' => $this->technique_id,
+            'technician_id' => $this->technician_id,
             'made_at' => $this->made_at->format('Y-m-d'),
             'milking_type_id' => $this->milking_type_id,
             'first_weight' => $this->first_weight,
             'second_weight' => $this->second_weight,
             'third_weight' => $this->third_weight,
             'livestock' => new LivestockResource($this->whenLoaded('livestock')),
-            'technique' => new TechniqueResource($this->whenLoaded('technique')),
+            'technician' => new TechnicianResource($this->whenLoaded('technician')),
             'milking_type' => new MilkingTypeResource($this->whenLoaded('milkingType')),
         ];
     }

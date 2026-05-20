@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['code', 'name', 'attributes'])]
 class ClinicalTreatment extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
 
 

@@ -17,6 +17,8 @@ class UpdateAbortRequest extends FormRequest
             'livestock_id' => ['sometimes', 'required', 'exists:livestock,id'],
             'made_at' => ['sometimes', 'required', 'date'],
             'abort_type_id' => ['sometimes', 'required', 'exists:abort_types,id'],
+            'technician_id' => ['sometimes', 'nullable', 'exists:technicians,id'],
+            'comment' => ['nullable', 'string'],
         ];
     }
 }

@@ -11,7 +11,7 @@ use App\Models\EntryCause;
 use App\Models\Livestock;
 use App\Models\Owner;
 use App\Models\State;
-use App\Models\Technique;
+use App\Models\Technician;
 use Illuminate\Database\Seeder;
 
 class LivestockSeeder extends Seeder
@@ -27,7 +27,7 @@ class LivestockSeeder extends Seeder
         $color = Color::where('code', 'WHITE')->first();
         $classification = Classification::where('code', 'GOOD')->first();
         $owner = Owner::first();
-        $technique = Technique::first();
+        $technician = Technician::first();
 
         $animals = [
             [
@@ -42,7 +42,7 @@ class LivestockSeeder extends Seeder
                 'color_id' => $color->id,
                 'classification_id' => $classification->id,
                 'owner_id' => $owner->id,
-                'technique_id' => $technique->id,
+                'technician_id' => $technician->id,
             ],
             [
                 'brand_number' => '1002',
@@ -56,7 +56,7 @@ class LivestockSeeder extends Seeder
                 'color_id' => $color->id,
                 'classification_id' => $classification->id,
                 'owner_id' => $owner->id,
-                'technique_id' => $technique->id,
+                'technician_id' => $technician->id,
             ],
         ];
 

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->morphs('batch');
             $table->date('made_at');
-            $table->foreignId('technique_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('technician_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('extraction_type_id')->constrained('extraction_types')->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();

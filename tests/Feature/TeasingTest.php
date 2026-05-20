@@ -23,7 +23,7 @@ class TeasingTest extends TestCase
                 '*' => [
                     'id',
                     'livestock_id',
-                    'technique_id',
+                    'technician_id',
                     'detected_at',
                 ]
             ]
@@ -43,7 +43,7 @@ class TeasingTest extends TestCase
 
         $response->assertJsonFragment([
             'livestock_id' => $teasing->livestock_id,
-            'technique_id' => $teasing->technique_id,
+            'technician_id' => $teasing->technician_id,
             'detected_at' => $teasing->detected_at->format('Y-m-d'),
         ]);
 
@@ -51,7 +51,7 @@ class TeasingTest extends TestCase
             'data' => [
                 'id',
                 'livestock_id',
-                'technique_id',
+                'technician_id',
                 'detected_at',
             ]
         ]);

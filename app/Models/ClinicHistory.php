@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['code', 'name', 'description', 'attributes', 'livestock_id', 'technique_id'])]
+#[Fillable(['code', 'name', 'description', 'attributes', 'livestock_id', 'technician_id'])]
 class ClinicHistory extends Model
 {
     use SoftDeletes;
@@ -30,9 +30,9 @@ class ClinicHistory extends Model
         return $this->belongsTo(Livestock::class);
     }
 
-    public function technique(): BelongsTo
+    public function technician(): BelongsTo
     {
-        return $this->belongsTo(Technique::class);
+        return $this->belongsTo(Technician::class);
     }
 
     public function clinicDiagnostics(): BelongsToMany

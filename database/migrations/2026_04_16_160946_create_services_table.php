@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('female_id')->constrained('livestock');
             $table->morphs('parentable');
-            $table->foreignId('technique_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('technician_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('service_type_id')->nullable()->constrained();
             $table->date('made_at');
             $table->softDeletes();

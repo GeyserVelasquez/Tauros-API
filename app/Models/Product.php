@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 #[Fillable(['code', 'name','description', 'attributes', 'product_type_id'])]
 class Product extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     protected function casts(): array
     {

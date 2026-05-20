@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('made_at');
             $table->enum('revision_result', RevisionResult::cases());
             $table->foreignId('revision_type_id')->constrained('revision_types');
-            $table->foreignId('technique_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('technician_id')->nullable()->constrained()->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();
 

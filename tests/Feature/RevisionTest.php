@@ -28,7 +28,7 @@ class RevisionTest extends TestCase
                     'made_at',
                     'revision_result',
                     'revision_type_id',
-                    'technique_id',
+                    'technician_id',
                 ]
             ]
         ]);
@@ -50,7 +50,7 @@ class RevisionTest extends TestCase
             'made_at' => $revision->made_at->format('Y-m-d'),
             'revision_result' => $revision->revision_result->value,
             'revision_type_id' => $revision->revision_type_id,
-            'technique_id' => $revision->technique_id,
+            'technician_id' => $revision->technician_id,
         ]);
     }
 

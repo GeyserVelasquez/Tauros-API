@@ -6,7 +6,7 @@ use App\Enums\RevisionResult;
 use App\Models\Livestock;
 use App\Models\Revision;
 use App\Models\RevisionType;
-use App\Models\Technique;
+use App\Models\Technician;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -26,7 +26,7 @@ class RevisionFactory extends Factory
             'made_at' => $this->faker->date(),
             'revision_result' => $this->faker->randomElement(RevisionResult::cases()),
             'revision_type_id' => RevisionType::factory(),
-            'technique_id' => Technique::factory(),
+            'technician_id' => Technician::factory(),
         ];
     }
 }

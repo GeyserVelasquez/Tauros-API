@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 #[Fillable(['text', 'livestock_id', 'commentable_id', 'commentable_type'])]
 class Comment extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     public function livestock(): BelongsTo
     {

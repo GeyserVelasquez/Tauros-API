@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['detected_at', 'livestock_id', 'technique_id'])]
+#[Fillable(['detected_at', 'livestock_id', 'technician_id'])]
 class Teasing extends Model
 {
     use SoftDeletes, HasFactory;
@@ -27,8 +27,8 @@ class Teasing extends Model
         return $this->belongsTo(Livestock::class);
     }
 
-    public function technique(): BelongsTo
+    public function technician(): BelongsTo
     {
-        return $this->belongsTo(Technique::class);
+        return $this->belongsTo(Technician::class);
     }
 }

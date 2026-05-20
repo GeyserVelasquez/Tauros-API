@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('supply_id')->constrained();
             $table->enum('type', ['income','outcome','loss']);
             $table->dateTime('made_at')->useCurrent();
-            $table->json('attributes');
+            $table->json('attributes')->nullable();
             $table->softDeletes();
             $table->timestamps();
 

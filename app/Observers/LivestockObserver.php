@@ -28,11 +28,7 @@ class LivestockObserver
      */
     public function created(Livestock $livestock): void
     {
-        $sanitizer = new LivestockSanitizer();
-        $validator = new LivestockValidator();
 
-        $sanitizer->sanitize($livestock);
-        $validator->validate($livestock);
     }
 
     /**

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('livestock_id')->constrained('livestock');
             $table->date('made_at');
             $table->foreignId('abort_type_id')->constrained();
-            $table->foreignId('technique_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('technician_id')->nullable()->constrained()->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();
 

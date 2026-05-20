@@ -34,7 +34,7 @@ class UpdateLivestockRequest extends FormRequest
             'color_id' => ['sometimes','nullable', 'exists:colors,id'],
             'classification_id' => ['sometimes','nullable', 'exists:classifications,id'],
             'owner_id' => ['sometimes','nullable', 'exists:owners,id'],
-            'technique_id' => ['sometimes','nullable', 'exists:techniques,id'],
+            'technician_id' => ['sometimes','nullable', 'exists:technicians,id'],
             'father_id' => ['sometimes','nullable', 'exists:livestock,id'],
             'mother_id' => ['sometimes','nullable', 'exists:livestock,id'],
             'adoptive_mother_id' => ['sometimes','nullable', 'exists:livestock,id'],

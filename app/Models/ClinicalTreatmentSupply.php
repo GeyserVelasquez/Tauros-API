@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['supply_id', 'quantity', 'clinical_treatment_id'])]
 class ClinicalTreatmentSupply extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
 
 

@@ -32,7 +32,7 @@ class LivestockResource extends JsonResource
             'color_id' => $this->color_id,
             'classification_id' => $this->classification_id,
             'owner_id' => $this->owner_id,
-            'technique_id' => $this->technique_id,
+            'technician_id' => $this->technician_id,
             'father_id' => $this->father_id,
             'mother_id' => $this->mother_id,
             'adoptive_mother_id' => $this->adoptive_mother_id,
@@ -48,7 +48,7 @@ class LivestockResource extends JsonResource
             'receiving_mother' => new LivestockResource($this->whenLoaded('receiving_mother')),
 
             'owner' => new OwnerResource($this->whenLoaded('owner')),
-            'technique' => new TechniqueResource($this->whenLoaded('technique')),
+            'technician' => new TechnicianResource($this->whenLoaded('technician')),
             'entry_cause' => new EntryCauseResource($this->whenLoaded('entryCause')),
             'state' => new StateResource($this->whenLoaded('state')),
 

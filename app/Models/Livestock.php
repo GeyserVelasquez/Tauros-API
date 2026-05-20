@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Attributes\Includable;
 use App\Enums\AnimalCategory;
 use App\Observers\LivestockObserver;
 use App\Traits\HasInclude;
@@ -20,8 +21,13 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
     'brand_number', 'electronic_code', 'name', 'entry_date', 'birth_date',
     'general_comment', 'tits', 'is_enabled', 'is_alive', 'entry_cause_id',
     'state_id', 'animal_category', 'breed_id', 'color_id', 'classification_id',
-    'owner_id', 'technique_id', 'father_id', 'mother_id',
+    'owner_id', 'technician_id', 'father_id', 'mother_id',
     'adoptive_mother_id', 'receiving_mother_id'
+])]
+#[Includable([
+    'entryCause', 'state', 'breed', 'color', 'classification', 'owner',
+    'technician', 'batch', 'father', 'mother', 'adoptiveMother',
+    'receivingMother', 'currentBatchMovement'
 ])]
 #[ObservedBy([LivestockObserver::class])]
 class Livestock extends Model
@@ -29,12 +35,6 @@ class Livestock extends Model
     use SoftDeletes, HasFactory, HasInclude;
 
     protected $table = 'livestock';
-
-    protected array $allowIncludes = [
-        'entryCause', 'state', 'breed', 'color', 'classification', 'owner',
-        'technique', 'batch', 'father', 'mother', 'adoptiveMother',
-        'receivingMother', 'currentBatchMovement'
-    ];
 
     protected function casts(): array
     {
@@ -77,9 +77,9 @@ class Livestock extends Model
         return $this->belongsTo(Owner::class);
     }
 
-    public function technique(): BelongsTo
+    public function technician(): BelongsTo
     {
-        return $this->belongsTo(Technique::class);
+        return $this->belongsTo(Technician::class);
     }
 
     public function batch(): BelongsTo

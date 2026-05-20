@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,5 +24,13 @@ class AppServiceProvider extends ServiceProvider
         ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
             return config('app.frontend_url')."/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}";
         });
+
+        Relation::enforceMorphMap([
+            'livestock' => 'App\Models\Livestock',
+            'milking'   => 'App\Models\Milking',
+            'abort'     => 'App\Models\Abort',
+        ]);
+
+        Relation::requireMorphMap();
     }
 }

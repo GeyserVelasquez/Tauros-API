@@ -11,7 +11,7 @@ use App\Models\EntryCause;
 use App\Models\Livestock;
 use App\Models\Owner;
 use App\Models\State;
-use App\Models\Technique;
+use App\Models\Technician;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
 
@@ -50,7 +50,7 @@ class LivestockFactory extends Factory
             'color_id' => Color::factory(),
             'classification_id' => Classification::factory(),
             'owner_id' => Owner::factory(),
-            'technique_id' => Technique::factory(),
+            'technician_id' => Technician::factory(),
             'father_id' => null,
             'mother_id' => null,
             'adoptive_mother_id' => null,
@@ -112,10 +112,12 @@ class LivestockFactory extends Factory
     protected function generateParent(array $childAttributes, int $currentLevel): self
     {
         $childBirthdate = $childAttributes['birth_date'] ?? now();
+        $parentBirthDate = $this->generateParentBirthDate($childBirthdate);
 
         return static::new()
             ->state([
-                'birth_date' => $this->generateParentBirthDate($childBirthdate),
+                'birth_date' => $parentBirthDate,
+                'entry_date' => $this->faker->dateTimeBetween($parentBirthDate, 'now')->format('Y-m-d'),
             ])
             ->withPedigree($currentLevel - 1);
     }

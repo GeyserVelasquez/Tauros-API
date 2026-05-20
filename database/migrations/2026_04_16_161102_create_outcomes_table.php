@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('outcomes', function (Blueprint $table) {
             $table->id();
             $table->date('made_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->text('description')->nullable();
             $table->foreignId('outcome_type_id')->constrained();
             $table->foreignId('livestock_id')->constrained('livestock');
             $table->softDeletes();

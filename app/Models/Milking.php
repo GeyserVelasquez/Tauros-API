@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
     'made_at', 'milking_type_id', 'first_weight', 'second_weight',
-    'third_weight', 'livestock_id', 'technique_id'
+    'third_weight', 'livestock_id', 'technician_id'
 ])]
 class Milking extends Model
 {
@@ -36,8 +36,8 @@ class Milking extends Model
         return $this->belongsTo(Livestock::class);
     }
 
-    public function technique(): BelongsTo
+    public function technician(): BelongsTo
     {
-        return $this->belongsTo(Technique::class);
+        return $this->belongsTo(Technician::class);
     }
 }

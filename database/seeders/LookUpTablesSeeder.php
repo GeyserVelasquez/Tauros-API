@@ -15,14 +15,12 @@ use App\Models\Herd;
 use App\Models\MilkingType;
 use App\Models\NewbornType;
 use App\Models\OutcomeType;
-use App\Models\ProductMovementType;
 use App\Models\ProductType;
-use App\Models\Result;
 use App\Models\RevisionType;
 use App\Models\ServiceType;
 use App\Models\State;
 use App\Models\SupplyType;
-use App\Models\Technique;
+use App\Models\Technician;
 use Illuminate\Database\Seeder;
 
 class LookUpTablesSeeder extends Seeder
@@ -77,22 +75,11 @@ class LookUpTablesSeeder extends Seeder
                 ['code' => 'SEMEN', 'name' => 'Semen'],
                 ['code' => 'EMBRYO', 'name' => 'Embrión'],
             ],
-            ProductMovementType::class => [
-                ['code' => 'IN', 'name' => 'Entrada'],
-                ['code' => 'OUT', 'name' => 'Salida'],
-                ['code' => 'ADJUST', 'name' => 'Ajuste'],
-            ],
             SupplyType::class => [
                 ['code' => 'MEDICINE', 'name' => 'Medicamento'],
                 ['code' => 'FEED', 'name' => 'Alimento'],
                 ['code' => 'TOOL', 'name' => 'Herramienta'],
                 ['code' => 'VACCINE', 'name' => 'Vacuna'],
-            ],
-            Result::class => [
-                ['code' => 'POSITIVE', 'name' => 'Positivo'],
-                ['code' => 'NEGATIVE', 'name' => 'Negativo'],
-                ['code' => 'PENDING', 'name' => 'Pendiente'],
-                ['code' => 'UNKNOWN', 'name' => 'Desconocido'],
             ],
             RevisionType::class => [
                 ['code' => 'GENERAL', 'name' => 'General'],
@@ -140,7 +127,7 @@ class LookUpTablesSeeder extends Seeder
                 ['code' => 'NORTH', 'name' => 'Hato Norte'],
                 ['code' => 'SOUTH', 'name' => 'Hato Sur'],
             ],
-            Technique::class => [
+            Technician::class => [
                 ['code' => 'V-14789456', 'name' => 'Técnico Principal', 'telephone' => '+584123456789'],
                 ['code' => 'V-28124536', 'name' => 'Veterinario Senior', 'telephone' => '+584227558955'],
             ],

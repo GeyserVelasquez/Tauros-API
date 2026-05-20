@@ -17,12 +17,12 @@ class AbortResource extends JsonResource
         return [
             'id' => $this->id,
             'livestock_id' => $this->livestock_id,
-            'technique_id' => $this->technique_id,
+            'technician_id' => $this->technician_id,
             'made_at' => $this->made_at->format('Y-m-d'),
             'abort_type_id' => $this->abort_type_id,
             'livestock' => new LivestockResource($this->whenLoaded('livestock')),
-            'abort_type' => new MilkingTypeResource($this->whenLoaded('abortType')),
-            'technique' => new TechniqueResource($this->whenLoaded('technique')),
+            'abort_type' => new AbortTypeResource($this->whenLoaded('abortType')),
+            'technician' => new TechnicianResource($this->whenLoaded('technician')),
         ];
     }
 }
