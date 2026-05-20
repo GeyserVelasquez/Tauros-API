@@ -15,6 +15,7 @@ class UpdateTeasingRequest extends FormRequest
     {
         return [
             'livestock_id' => ['sometimes', 'required', 'exists:livestock,id'],
+            'technician_id' => ['sometimes', 'nullable', 'exists:technicians,id'],
             'detected_at' => ['sometimes', 'required', 'date'],
         ];
     }

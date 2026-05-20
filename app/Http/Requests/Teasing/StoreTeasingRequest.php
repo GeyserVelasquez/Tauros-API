@@ -15,6 +15,7 @@ class StoreTeasingRequest extends FormRequest
     {
         return [
             'livestock_id' => ['required', 'exists:livestock,id'],
+            'technician_id' => ['nullable', 'exists:technicians,id'],
             'detected_at' => ['required', 'date'],
         ];
     }
