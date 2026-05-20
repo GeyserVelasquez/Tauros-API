@@ -2,12 +2,14 @@
 
 namespace App\Traits;
 
+use App\Attributes\Includable;
 use Illuminate\Database\Eloquent\Builder;
+use ReflectionClass;
 
 trait HasInclude
 {
 
-    public function scopeIncluded(Builder $query, ?string $includes): Builder
+    public function scopeWithIncludes(Builder $query, ?string $includes): Builder
     {
         $validIncludes = $this->parseIncludes($includes);
 
@@ -27,12 +29,21 @@ trait HasInclude
 
     protected function parseIncludes(?string $includes): array
     {
-        if (empty($includes) || !property_exists($this, 'allowIncludes')) {
+        if (empty($includes)) {
             return [];
         }
 
+        $reflection = new ReflectionClass($this);
+        $attributes = $reflection->getAttributes(Includable::class);
+
+        if (empty($attributes)) {
+            return [];
+        }
+
+        $allowedIncludes = $attributes[0]->newInstance()->includes;
+
         $requested = explode(',', $includes);
 
-        return array_intersect($requested, $this->allowIncludes);
+        return array_intersect($requested, $allowedIncludes);
     }
 }

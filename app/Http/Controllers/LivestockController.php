@@ -17,11 +17,11 @@ class LivestockController extends Controller
     {
         $includedRelationships = $request->query('include');
 
-        $livestock = Livestock::included($includedRelationships)
+        $livestock = Livestock::withIncludes($includedRelationships)
             ->paginate(15)
             ->withQueryString();
 
-        return $livestock->toResourceCollection();
+        return LivestockResource::collection($livestock);
     }
 
     /**
@@ -39,11 +39,12 @@ class LivestockController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request,Livestock $livestock): LivestockResource
+    public function show(Request $request, Livestock $livestock): LivestockResource
     {
         $livestock->loadIncludes($request->query('include'));
 
-        return new LivestockResource($livestock);    }
+        return new LivestockResource($livestock);
+    }
 
     /**
      * Update the specified resource in storage.

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Attributes\Includable;
 use App\Enums\AnimalCategory;
 use App\Observers\LivestockObserver;
 use App\Traits\HasInclude;
@@ -23,18 +24,17 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
     'owner_id', 'technician_id', 'father_id', 'mother_id',
     'adoptive_mother_id', 'receiving_mother_id'
 ])]
+#[Includable([
+    'entryCause', 'state', 'breed', 'color', 'classification', 'owner',
+    'technician', 'batch', 'father', 'mother', 'adoptiveMother',
+    'receivingMother', 'currentBatchMovement'
+])]
 #[ObservedBy([LivestockObserver::class])]
 class Livestock extends Model
 {
     use SoftDeletes, HasFactory, HasInclude;
 
     protected $table = 'livestock';
-
-    protected array $allowIncludes = [
-        'entryCause', 'state', 'breed', 'color', 'classification', 'owner',
-        'technician', 'batch', 'father', 'mother', 'adoptiveMother',
-        'receivingMother', 'currentBatchMovement'
-    ];
 
     protected function casts(): array
     {
