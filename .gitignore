@@ -3,6 +3,9 @@
 .env
 .env.backup
 .env.production
+/.ai
+/.agents
+/.gemini
 .phpactor.json
 .phpunit.result.cache
 /.fleet
