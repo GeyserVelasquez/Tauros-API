@@ -6,18 +6,26 @@ use App\Http\Requests\Growth\StoreGrowthRequest;
 use App\Http\Requests\Growth\UpdateGrowthRequest;
 use App\Http\Resources\GrowthResource;
 use App\Models\Growth;
+use App\Services\QueryBuilderService;
 use Illuminate\Http\Request;
 
 class GrowthController extends Controller
 {
+    public function __construct(
+        protected QueryBuilderService $queryBuilderService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $growths = Growth::all()->toResourceCollection();
+        $query = $this->queryBuilderService->build(Growth::class, $request);
 
-        return $growths;
+        $growths = $query->paginate($request->get('per_page', 15))
+            ->withQueryString();
+
+        return GrowthResource::collection($growths);
     }
 
     /**
@@ -29,15 +37,18 @@ class GrowthController extends Controller
 
         $growth = Growth::create($data);
 
-        return (new GrowthResource($growth));
+        return new GrowthResource($growth);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Growth $growth)
+    public function show(Request $request, Growth $growth)
     {
-        return (new GrowthResource($growth));
+        $loadedGrowth = $this->queryBuilderService->buildForModel($growth, $request)
+            ->firstOrFail();
+
+        return new GrowthResource($loadedGrowth);
     }
 
     /**
@@ -49,7 +60,7 @@ class GrowthController extends Controller
 
         $growth->update($data);
 
-        return (new GrowthResource($growth));
+        return new GrowthResource($growth);
     }
 
     /**

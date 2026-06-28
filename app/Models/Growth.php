@@ -2,23 +2,26 @@
 
 namespace App\Models;
 
+use App\Attributes\Filterable;
 use App\Attributes\Includable;
+use App\Attributes\Sortable;
 use App\Observers\GrowthObserver;
-use App\Traits\HasInclude;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['weight', 'height', 'made_at', 'livestock_id', 'growth_type_id', 'technician_id', 'growthable_id', 'growthable_type'])]
 #[Includable(['livestock', 'growthType', 'technician', 'growthable'])]
+#[Filterable(['livestock_id', 'growth_type_id', 'technician_id', 'made_at'])]
+#[Sortable(['id', 'weight', 'height', 'made_at', 'created_at'])]
 #[ObservedBy(GrowthObserver::class)]
 class Growth extends Model
 {
-    use SoftDeletes, HasFactory, HasInclude;
+    use HasFactory, SoftDeletes;
 
     protected function casts(): array
     {
