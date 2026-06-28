@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Feature;
+
 use App\Models\Abort;
 use Database\Factories\AbortFactory;
 use Tests\TestCase;
