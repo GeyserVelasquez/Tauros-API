@@ -2,37 +2,41 @@
 
 namespace App\Models;
 
+use App\Attributes\Filterable;
 use App\Attributes\Includable;
+use App\Attributes\Sortable;
 use App\Enums\AnimalCategory;
 use App\Observers\LivestockObserver;
-use App\Traits\HasInclude;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
     'brand_number', 'electronic_code', 'name', 'entry_date', 'birth_date',
     'general_comment', 'tits', 'is_enabled', 'is_alive', 'entry_cause_id',
     'state_id', 'animal_category', 'breed_id', 'color_id', 'classification_id',
     'owner_id', 'technician_id', 'father_id', 'mother_id',
-    'adoptive_mother_id', 'receiving_mother_id'
+    'adoptive_mother_id', 'receiving_mother_id',
 ])]
 #[Includable([
     'entryCause', 'state', 'breed', 'color', 'classification', 'owner',
     'technician', 'batch', 'father', 'mother', 'adoptiveMother',
-    'receivingMother', 'currentBatchMovement'
+    'receivingMother', 'currentBatchMovement',
 ])]
+#[Filterable(['name', 'brand_number', 'electronic_code', 'state_id', 'breed_id'])]
+#[Sortable(['id', 'name', 'entry_date', 'birth_date', 'created_at'])]
 #[ObservedBy([LivestockObserver::class])]
 class Livestock extends Model
 {
-    use SoftDeletes, HasFactory, HasInclude;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'livestock';
 
@@ -221,5 +225,10 @@ class Livestock extends Model
     {
         return $this->belongsToMany(Batch::class, 'batch_movements')
             ->withTimestamps();
+    }
+
+    public function scopeBornAfter(Builder $query, string $date): Builder
+    {
+        return $query->where('birth_date', '>=', $date);
     }
 }

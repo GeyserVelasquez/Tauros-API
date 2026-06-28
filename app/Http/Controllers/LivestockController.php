@@ -6,19 +6,23 @@ use App\Http\Requests\Livestock\StoreLivestockRequest;
 use App\Http\Requests\Livestock\UpdateLivestockRequest;
 use App\Http\Resources\LivestockResource;
 use App\Models\Livestock;
+use App\Services\QueryBuilderService;
 use Illuminate\Http\Request;
 
 class LivestockController extends Controller
 {
+    public function __construct(
+        protected QueryBuilderService $queryBuilderService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $includedRelationships = $request->query('include');
+        $query = $this->queryBuilderService->build(Livestock::class, $request);
 
-        $livestock = Livestock::withIncludes($includedRelationships)
-            ->paginate(15)
+        $livestock = $query->paginate($request->get('per_page', 15))
             ->withQueryString();
 
         return LivestockResource::collection($livestock);
@@ -33,7 +37,7 @@ class LivestockController extends Controller
 
         $livestock = Livestock::create($data);
 
-        return (new LivestockResource($livestock));
+        return new LivestockResource($livestock);
     }
 
     /**
@@ -41,9 +45,10 @@ class LivestockController extends Controller
      */
     public function show(Request $request, Livestock $livestock): LivestockResource
     {
-        $livestock->loadIncludes($request->query('include'));
+        $loadedLivestock = $this->queryBuilderService->buildForModel($livestock, $request)
+            ->firstOrFail();
 
-        return new LivestockResource($livestock);
+        return new LivestockResource($loadedLivestock);
     }
 
     /**
@@ -55,7 +60,7 @@ class LivestockController extends Controller
 
         $livestock->update($data);
 
-        return (new LivestockResource($livestock));
+        return new LivestockResource($livestock);
     }
 
     /**
