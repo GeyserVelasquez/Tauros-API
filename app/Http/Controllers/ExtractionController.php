@@ -6,18 +6,26 @@ use App\Http\Requests\Extraction\StoreExtractionRequest;
 use App\Http\Requests\Extraction\UpdateExtractionRequest;
 use App\Http\Resources\ExtractionResource;
 use App\Models\Extraction;
+use App\Services\QueryBuilderService;
 use Illuminate\Http\Request;
 
 class ExtractionController extends Controller
 {
+    public function __construct(
+        protected QueryBuilderService $queryBuilderService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $extractions = Extraction::all()->toResourceCollection();
+        $query = $this->queryBuilderService->build(Extraction::class, $request);
 
-        return $extractions;
+        $extractions = $query->paginate($request->get('per_page', 15))
+            ->withQueryString();
+
+        return ExtractionResource::collection($extractions);
     }
 
     /**
@@ -29,15 +37,18 @@ class ExtractionController extends Controller
 
         $extraction = Extraction::create($data);
 
-        return (new ExtractionResource($extraction));
+        return new ExtractionResource($extraction);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Extraction $extraction)
+    public function show(Request $request, Extraction $extraction)
     {
-        return (new ExtractionResource($extraction));
+        $loadedExtraction = $this->queryBuilderService->buildForModel($extraction, $request)
+            ->firstOrFail();
+
+        return new ExtractionResource($loadedExtraction);
     }
 
     /**
@@ -49,7 +60,7 @@ class ExtractionController extends Controller
 
         $extraction->update($data);
 
-        return (new ExtractionResource($extraction));
+        return new ExtractionResource($extraction);
     }
 
     /**
