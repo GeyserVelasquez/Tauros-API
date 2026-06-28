@@ -6,18 +6,26 @@ use App\Http\Requests\ClinicHistory\StoreClinicHistoryRequest;
 use App\Http\Requests\ClinicHistory\UpdateClinicHistoryRequest;
 use App\Http\Resources\ClinicHistoryResource;
 use App\Models\ClinicHistory;
+use App\Services\QueryBuilderService;
 use Illuminate\Http\Request;
 
 class ClinicHistoryController extends Controller
 {
+    public function __construct(
+        protected QueryBuilderService $queryBuilderService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $clinicHistories = ClinicHistory::all()->toResourceCollection();
+        $query = $this->queryBuilderService->build(ClinicHistory::class, $request);
 
-        return $clinicHistories;
+        $clinicHistories = $query->paginate($request->get('per_page', 15))
+            ->withQueryString();
+
+        return ClinicHistoryResource::collection($clinicHistories);
     }
 
     /**
@@ -29,15 +37,18 @@ class ClinicHistoryController extends Controller
 
         $clinicHistory = ClinicHistory::create($data);
 
-        return (new ClinicHistoryResource($clinicHistory));
+        return new ClinicHistoryResource($clinicHistory);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(ClinicHistory $clinicHistory)
+    public function show(Request $request, ClinicHistory $clinicHistory)
     {
-        return (new ClinicHistoryResource($clinicHistory));
+        $loadedClinicHistory = $this->queryBuilderService->buildForModel($clinicHistory, $request)
+            ->firstOrFail();
+
+        return new ClinicHistoryResource($loadedClinicHistory);
     }
 
     /**
@@ -49,7 +60,7 @@ class ClinicHistoryController extends Controller
 
         $clinicHistory->update($data);
 
-        return (new ClinicHistoryResource($clinicHistory));
+        return new ClinicHistoryResource($clinicHistory);
     }
 
     /**
