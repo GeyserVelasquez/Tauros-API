@@ -6,18 +6,26 @@ use App\Http\Requests\Newborn\StoreNewbornRequest;
 use App\Http\Requests\Newborn\UpdateNewbornRequest;
 use App\Http\Resources\NewbornResource;
 use App\Models\Newborn;
+use App\Services\QueryBuilderService;
 use Illuminate\Http\Request;
 
 class NewbornController extends Controller
 {
+    public function __construct(
+        protected QueryBuilderService $queryBuilderService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $newborns = Newborn::all()->toResourceCollection();
+        $query = $this->queryBuilderService->build(Newborn::class, $request);
 
-        return $newborns;
+        $newborns = $query->paginate($request->get('per_page', 15))
+            ->withQueryString();
+
+        return NewbornResource::collection($newborns);
     }
 
     /**
@@ -29,15 +37,18 @@ class NewbornController extends Controller
 
         $newborn = Newborn::create($data);
 
-        return (new NewbornResource($newborn));
+        return new NewbornResource($newborn);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Newborn $newborn)
+    public function show(Request $request, Newborn $newborn)
     {
-        return (new NewbornResource($newborn));
+        $loadedNewborn = $this->queryBuilderService->buildForModel($newborn, $request)
+            ->firstOrFail();
+
+        return new NewbornResource($loadedNewborn);
     }
 
     /**
@@ -49,7 +60,7 @@ class NewbornController extends Controller
 
         $newborn->update($data);
 
-        return (new NewbornResource($newborn));
+        return new NewbornResource($newborn);
     }
 
     /**
