@@ -20,7 +20,6 @@ class LivestockValidator extends Validator
      */
     public function validate(Livestock $livestock): void
     {
-        // Usamos toArray() para obtener los datos incluyendo los casts (como Enums)
         $data = $livestock->toArray();
 
         $rules = [
@@ -40,10 +39,6 @@ class LivestockValidator extends Validator
                 new ParentOlderThanChild($livestock->birth_date)
             ],
 
-            // breed no puede ser nulo
-            'breed_id' => ['required', 'exists:breeds,id'],
-
-            // brand_number no puede ser nulo
             'brand_number' => ['required', 'string'],
         ];
 

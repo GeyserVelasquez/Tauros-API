@@ -168,6 +168,7 @@ return [
         'available'                => 'disponible',
         'birthday'                 => 'cumpleaños',
         'body'                     => 'contenido',
+        'brand_number'             => 'número de hierro',
         'city'                     => 'ciudad',
         'code'                     => 'código',
         'color'                    => 'color',
