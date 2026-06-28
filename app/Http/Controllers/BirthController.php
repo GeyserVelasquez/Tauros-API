@@ -6,18 +6,26 @@ use App\Http\Requests\Birth\StoreBirthRequest;
 use App\Http\Requests\Birth\UpdateBirthRequest;
 use App\Http\Resources\BirthResource;
 use App\Models\Birth;
+use App\Services\QueryBuilderService;
 use Illuminate\Http\Request;
 
 class BirthController extends Controller
 {
+    public function __construct(
+        protected QueryBuilderService $queryBuilderService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $births = Birth::all()->toResourceCollection();
+        $query = $this->queryBuilderService->build(Birth::class, $request);
 
-        return $births;
+        $births = $query->paginate($request->get('per_page', 15))
+            ->withQueryString();
+
+        return BirthResource::collection($births);
     }
 
     /**
@@ -29,15 +37,18 @@ class BirthController extends Controller
 
         $birth = Birth::create($data);
 
-        return (new BirthResource($birth));
+        return new BirthResource($birth);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Birth $birth)
+    public function show(Request $request, Birth $birth)
     {
-        return (new BirthResource($birth));
+        $loadedBirth = $this->queryBuilderService->buildForModel($birth, $request)
+            ->firstOrFail();
+
+        return new BirthResource($loadedBirth);
     }
 
     /**
@@ -49,7 +60,7 @@ class BirthController extends Controller
 
         $birth->update($data);
 
-        return (new BirthResource($birth));
+        return new BirthResource($birth);
     }
 
     /**
