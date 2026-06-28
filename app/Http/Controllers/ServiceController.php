@@ -6,18 +6,26 @@ use App\Http\Requests\Service\StoreServiceRequest;
 use App\Http\Requests\Service\UpdateServiceRequest;
 use App\Http\Resources\ServiceResource;
 use App\Models\Service;
+use App\Services\QueryBuilderService;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
+    public function __construct(
+        protected QueryBuilderService $queryBuilderService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $services = Service::all()->toResourceCollection();
+        $query = $this->queryBuilderService->build(Service::class, $request);
 
-        return $services;
+        $services = $query->paginate($request->get('per_page', 15))
+            ->withQueryString();
+
+        return ServiceResource::collection($services);
     }
 
     /**
@@ -29,15 +37,18 @@ class ServiceController extends Controller
 
         $service = Service::create($data);
 
-        return (new ServiceResource($service));
+        return new ServiceResource($service);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Service $service)
+    public function show(Request $request, Service $service)
     {
-        return (new ServiceResource($service));
+        $loadedService = $this->queryBuilderService->buildForModel($service, $request)
+            ->firstOrFail();
+
+        return new ServiceResource($loadedService);
     }
 
     /**
@@ -49,7 +60,7 @@ class ServiceController extends Controller
 
         $service->update($data);
 
-        return (new ServiceResource($service));
+        return new ServiceResource($service);
     }
 
     /**
