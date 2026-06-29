@@ -2,23 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ExtractionType\UpdateExtractionTypeRequest;
 use App\Http\Requests\ExtractionType\StoreExtractionTypeRequest;
+use App\Http\Requests\ExtractionType\UpdateExtractionTypeRequest;
 use App\Http\Resources\ExtractionTypeResource;
 use App\Models\ExtractionType;
+use App\Services\QueryBuilderService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class ExtractionTypeController extends Controller
 {
+    public function __construct(
+        protected QueryBuilderService $queryBuilderService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $extractionTypes = ExtractionType::all()->toResourceCollection();
+        $query = $this->queryBuilderService->build(ExtractionType::class, $request);
 
-        return $extractionTypes;
+        $extractionTypes = $query->paginate($request->get('per_page', 15))
+            ->withQueryString();
+
+        return ExtractionTypeResource::collection($extractionTypes);
     }
 
     /**
@@ -30,15 +37,18 @@ class ExtractionTypeController extends Controller
 
         $extractionType = ExtractionType::create($data);
 
-        return (new ExtractionTypeResource($extractionType));
+        return new ExtractionTypeResource($extractionType);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(ExtractionType $extractionType)
+    public function show(Request $request, ExtractionType $extractionType)
     {
-        return (new ExtractionTypeResource($extractionType));
+        $loadedExtractionType = $this->queryBuilderService->buildForModel($extractionType, $request)
+            ->firstOrFail();
+
+        return new ExtractionTypeResource($loadedExtractionType);
     }
 
     /**
@@ -50,7 +60,7 @@ class ExtractionTypeController extends Controller
 
         $extractionType->update($data);
 
-        return (new ExtractionTypeResource($extractionType));
+        return new ExtractionTypeResource($extractionType);
     }
 
     /**

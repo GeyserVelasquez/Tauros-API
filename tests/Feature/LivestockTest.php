@@ -381,6 +381,20 @@ class LivestockTest extends TestCase
         $response->assertStatus(204);
 
         $this->assertSoftDeleted($livestock);
+        }
+
+    public function test_users_cannot_get_a_soft_deleted_livestock(): void
+    {
+        $livestock = Livestock::factory()->create();
+
+        $livestock->delete();
+
+        $route = route('livestock.show', $livestock);
+
+        $response = $this->actingAs($this->user)
+            ->getJson($route);
+
+        $response->assertStatus(404);
     }
 
     public function test_users_cannot_create_a_new_male_livestock_with_tits(): void

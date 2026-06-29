@@ -3,6 +3,9 @@
 .env
 .env.backup
 .env.production
+/.ai
+/.agents
+/.gemini
 .phpactor.json
 .phpunit.result.cache
 /.fleet
@@ -14,11 +17,13 @@
 /auth.json
 /docs
 /node_modules
+/plans
 /public/build
 /public/hot
 /public/storage
 /storage/*.key
 /storage/pail
+/trash
 /vendor
 _ide_helper.php
 Homestead.json

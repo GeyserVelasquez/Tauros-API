@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Feature;
+
 use App\Models\Teasing;
 use Tests\TestCase;
 
@@ -70,6 +72,7 @@ class TeasingTest extends TestCase
 
         $this->assertDatabaseHas('teasings', [
             'livestock_id' => $payload['livestock_id'],
+            'technician_id' => $payload['technician_id'],
             'detected_at' => $payload['detected_at'],
         ]);
     }
@@ -90,7 +93,10 @@ class TeasingTest extends TestCase
     {
         $teasing = Teasing::factory()->create();
 
-        $payload = ['detected_at' => now()->format('Y-m-d')];
+        $payload = [
+            'detected_at' => now()->format('Y-m-d'),
+            'technician_id' => $teasing->technician_id,
+        ];
 
         $route = route('teasings.update', $teasing);
 
@@ -101,6 +107,7 @@ class TeasingTest extends TestCase
 
         $this->assertDatabaseHas('teasings', [
             'id' => $teasing->id,
+            'technician_id' => $payload['technician_id'],
             'detected_at' => $payload['detected_at']
         ]);
     }

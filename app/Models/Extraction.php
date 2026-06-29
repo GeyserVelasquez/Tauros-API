@@ -2,18 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App\Attributes\Filterable;
+use App\Attributes\Includable;
+use App\Attributes\Sortable;
+use App\Observers\ExtractionObserver;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['batch_type', 'batch_id', 'technician_id', 'extraction_type_id', 'made_at'])]
+#[Includable(['batch', 'technician', 'extractionType'])]
+#[Filterable(['batch_type', 'batch_id', 'technician_id', 'extraction_type_id', 'made_at'])]
+#[Sortable(['id', 'made_at', 'created_at'])]
+#[ObservedBy(ExtractionObserver::class)]
 class Extraction extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected function casts(): array
     {

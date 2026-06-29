@@ -2,21 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App\Attributes\Filterable;
+use App\Attributes\Includable;
+use App\Attributes\Sortable;
+use App\Observers\ClinicHistoryObserver;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['code', 'name', 'description', 'attributes', 'livestock_id', 'technician_id'])]
+#[Includable(['livestock', 'technician', 'clinicDiagnostics', 'clinicalTreatments'])]
+#[Filterable(['code', 'name', 'livestock_id', 'technician_id'])]
+#[Sortable(['id', 'code', 'name', 'created_at'])]
+#[ObservedBy(ClinicHistoryObserver::class)]
 class ClinicHistory extends Model
 {
-    use SoftDeletes;
-
-
+    use HasFactory, SoftDeletes;
 
     protected function casts(): array
     {
