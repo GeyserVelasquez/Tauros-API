@@ -8,6 +8,7 @@ use App\Models\SemenBatch;
 use App\Models\EmbrionBatch;
 use Illuminate\Support\Facades\Validator as FacadeValidator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class ServiceValidator extends Validator
 {
@@ -60,7 +61,9 @@ class ServiceValidator extends Validator
 
     private function validateParentableType(Service $service): void
     {
-        if (!in_array($service->parentable_type, $this->parentableMap)) {
+        $actualClass = Relation::getMorphedModel($service->parentable_type) ?? $service->parentable_type;
+
+        if (!in_array($actualClass, $this->parentableMap)) {
             throw ValidationException::withMessages([
                 'parentable_type' => ['El tipo de parental no es válido para un servicio.'],
             ]);
@@ -69,8 +72,8 @@ class ServiceValidator extends Validator
 
     private function validateParentableExists(Service $service): void
     {
-        $modelClass = $service->parentable_type;
-        
+        $modelClass = Relation::getMorphedModel($service->parentable_type) ?? $service->parentable_type;
+
         if (!class_exists($modelClass) || !$modelClass::where('id', $service->parentable_id)->exists()) {
             throw ValidationException::withMessages([
                 'parentable_id' => ['El parental seleccionado no existe.'],
@@ -81,7 +84,7 @@ class ServiceValidator extends Validator
     private function validateFemaleGender(Service $service): void
     {
         $female = $service->female;
-        
+
         if ($female && !$female->animal_category->isFemale()) {
             throw ValidationException::withMessages([
                 'female_id' => ['La hembra debe ser de categoría femenina.'],
@@ -94,7 +97,7 @@ class ServiceValidator extends Validator
         // Solo validamos género si el parental es un animal vivo (Livestock)
         if ($service->parentable_type === Livestock::class) {
             $male = $service->parentable;
-            
+
             if ($male && !$male->animal_category->isMale()) {
                 throw ValidationException::withMessages([
                     'parentable_id' => ['El semental debe ser de categoría masculina.'],
