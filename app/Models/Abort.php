@@ -2,18 +2,23 @@
 
 namespace App\Models;
 
+use App\Attributes\Filterable;
+use App\Attributes\Includable;
+use App\Attributes\Sortable;
 use App\Traits\HasComment;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['made_at', 'abort_type_id', 'livestock_id', 'technician_id'])]
+#[Includable(['abortType', 'livestock', 'technician', 'comment'])]
+#[Filterable(['abort_type_id', 'livestock_id', 'technician_id', 'made_at'])]
+#[Sortable(['id', 'made_at', 'created_at'])]
 class Abort extends Model
 {
-    use SoftDeletes, HasFactory, HasComment;
+    use HasComment, HasFactory, SoftDeletes;
 
     protected function casts(): array
     {
@@ -36,5 +41,4 @@ class Abort extends Model
     {
         return $this->belongsTo(Technician::class);
     }
-
 }

@@ -2,19 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App\Attributes\Filterable;
+use App\Attributes\Includable;
+use App\Attributes\Sortable;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['code', 'name'])]
+#[Includable(['newborns'])]
+#[Filterable(['code', 'name'])]
+#[Sortable(['id', 'code', 'name', 'created_at'])]
 class NewbornType extends Model
 {
-    use SoftDeletes,HasFactory;
-
-
+    use HasFactory,SoftDeletes;
 
     public function newborns(): HasMany
     {
