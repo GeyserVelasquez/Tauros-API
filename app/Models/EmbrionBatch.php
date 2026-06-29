@@ -2,17 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Attributes\Filterable;
+use App\Attributes\Includable;
+use App\Attributes\Sortable;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['code', 'name', 'description', 'mother_id', 'father_id', 'technician_id'])]
+#[Includable(['mother', 'father', 'technician', 'products', 'services', 'extractions'])]
+#[Filterable(['code', 'name', 'mother_id', 'father_id', 'technician_id'])]
+#[Sortable(['id', 'code', 'name', 'created_at'])]
 class EmbrionBatch extends Model
 {
-    use SoftDeletes, HasFactory;
+    use HasFactory, SoftDeletes;
 
     public function mother(): BelongsTo
     {

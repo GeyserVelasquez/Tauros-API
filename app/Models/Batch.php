@@ -2,20 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App\Attributes\Filterable;
+use App\Attributes\Includable;
+use App\Attributes\Sortable;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['code', 'name', 'herd_id'])]
+#[Includable(['herd', 'livestock', 'batchMovements', 'extractions'])]
+#[Filterable(['code', 'name', 'herd_id'])]
+#[Sortable(['id', 'code', 'name', 'created_at'])]
 class Batch extends Model
 {
-    use SoftDeletes, HasFactory;
+    use HasFactory, SoftDeletes;
 
     public function herd(): BelongsTo
     {

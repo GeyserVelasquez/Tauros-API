@@ -26,13 +26,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'owner_id', 'technician_id', 'father_id', 'mother_id',
     'adoptive_mother_id', 'receiving_mother_id',
 ])]
+
 #[Includable([
     'entryCause', 'state', 'breed', 'color', 'classification', 'owner',
     'technician', 'batch', 'father', 'mother', 'adoptiveMother',
     'receivingMother', 'currentBatchMovement',
 ])]
+
 #[Filterable(['name', 'brand_number', 'electronic_code', 'state_id', 'breed_id'])]
 #[Sortable(['id', 'name', 'entry_date', 'birth_date', 'created_at'])]
+
 #[ObservedBy([LivestockObserver::class])]
 class Livestock extends Model
 {
