@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['livestock_id', 'made_at', 'revision_result', 'revision_type_id', 'technician_id'])]
 #[Includable(['livestock', 'revisionType', 'technician'])]
-#[Filterable(['livestock_id', 'revision_type_id', 'technician_id', 'made_at', 'revision_result'])]
+#[Filterable(['livestock_id', 'revision_type_id', 'technician_id', 'made_at', 'revision_result', 'livestock.brand_number'])]
 #[Sortable(['id', 'made_at', 'created_at'])]
 class Revision extends Model
 {
