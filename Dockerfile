@@ -25,8 +25,7 @@ RUN composer require laravel/octane --no-interaction
 FROM dunglas/frankenphp:php8.4-alpine
 
 # Instalar las mismas extensiones
-RUN install-php-extensions pdo_pgsql bcmath intl zip opcache
-
+RUN install-php-extensions pdo_pgsql bcmath intl zip opcache pcntl
 WORKDIR /app
 
 # Copiar todo desde el builder
