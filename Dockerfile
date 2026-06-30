@@ -40,4 +40,4 @@ ENV FRANKENPHP_CONFIG="worker ./public/index.php"
 
 EXPOSE 8000
 
-CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000"]
+CMD ["frankenphp", "php-server", "--worker", "./public/index.php", "--host", "0.0.0.0", "--port", "8000"]
