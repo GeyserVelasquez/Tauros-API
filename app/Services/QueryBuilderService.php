@@ -7,6 +7,7 @@ use App\Attributes\Includable;
 use App\Attributes\Sortable;
 use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder as SpatieQueryBuilder;
 
 class QueryBuilderService
@@ -54,7 +55,16 @@ class QueryBuilderService
         // Configurar Filtros permitidos
         $filterableAttr = $reflection->getAttributes(Filterable::class);
         if (! empty($filterableAttr)) {
-            $query->allowedFilters(...$filterableAttr[0]->newInstance()->filters);
+            $filters = $filterableAttr[0]->newInstance()->filters;
+            $allowedFilters = array_map(function ($filter) {
+                // Si el filtro termina en '_id' o es un ID exacto, forzar AllowedFilter::exact()
+                if (str_ends_with($filter, '_id') || $filter === 'id') {
+                    return AllowedFilter::exact($filter);
+                }
+                return $filter;
+            }, $filters);
+
+            $query->allowedFilters(...$allowedFilters);
         }
 
         // Configurar Sorts permitidos

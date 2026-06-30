@@ -6,18 +6,26 @@ use App\Http\Requests\Abort\StoreAbortRequest;
 use App\Http\Requests\Abort\UpdateAbortRequest;
 use App\Http\Resources\AbortResource;
 use App\Models\Abort;
+use App\Services\QueryBuilderService;
 use Illuminate\Http\Request;
 
 class AbortController extends Controller
 {
+    public function __construct(
+        protected QueryBuilderService $queryBuilderService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $aborts = Abort::all()->toResourceCollection();
+        $query = $this->queryBuilderService->build(Abort::class, $request);
 
-        return $aborts;
+        $aborts = $query->paginate($request->get('per_page', 15))
+            ->withQueryString();
+
+        return AbortResource::collection($aborts);
     }
 
     /**

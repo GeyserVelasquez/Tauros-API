@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['female_id', 'parentable_type', 'parentable_id', 'technician_id', 'service_type_id', 'made_at'])]
 #[Includable(['female', 'parentable', 'technician', 'serviceType'])]
-#[Filterable(['female_id', 'parentable_type', 'parentable_id', 'technician_id', 'service_type_id', 'made_at'])]
+#[Filterable(['female_id', 'parentable_type', 'parentable_id', 'technician_id', 'service_type_id', 'made_at', 'female.brand_number'])]
 #[Sortable(['id', 'made_at', 'created_at'])]
 #[ObservedBy(ServiceObserver::class)]
 class Service extends Model

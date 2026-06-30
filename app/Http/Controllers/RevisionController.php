@@ -6,18 +6,26 @@ use App\Http\Requests\Revision\StoreRevisionRequest;
 use App\Http\Requests\Revision\UpdateRevisionRequest;
 use App\Http\Resources\RevisionResource;
 use App\Models\Revision;
+use App\Services\QueryBuilderService;
 use Illuminate\Http\Request;
 
 class RevisionController extends Controller
 {
+    public function __construct(
+        protected QueryBuilderService $queryBuilderService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $revisions = Revision::all()->toResourceCollection();
+        $query = $this->queryBuilderService->build(Revision::class, $request);
 
-        return $revisions;
+        $revisions = $query->paginate($request->get('per_page', 15))
+            ->withQueryString();
+
+        return RevisionResource::collection($revisions);
     }
 
     /**

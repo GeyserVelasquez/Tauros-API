@@ -13,8 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['made_at', 'abort_type_id', 'livestock_id', 'technician_id'])]
-#[Includable(['abortType', 'livestock', 'technician', 'comment'])]
-#[Filterable(['abort_type_id', 'livestock_id', 'technician_id', 'made_at'])]
+#[Includable(['abortType', 'livestock', 'technician'])]
+#[Filterable(['abort_type_id', 'livestock_id', 'technician_id', 'made_at', 'livestock.brand_number'])]
 #[Sortable(['id', 'made_at', 'created_at'])]
 class Abort extends Model
 {
