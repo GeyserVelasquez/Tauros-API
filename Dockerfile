@@ -1,41 +1,39 @@
 # --- Etapa 1: Construcción (Builder) ---
 FROM php:8.5-fpm-alpine AS builder
 
+# 1. Instalar dependencias del sistema Y las extensiones de PHP aquí también
 RUN apk add --no-cache libpng-dev libzip-dev zip unzip git
+# Esta utilidad es vital para instalar extensiones fácilmente en Docker
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN install-php-extensions pdo_pgsql bcmath intl zip opcache
+
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Usamos una ruta absoluta fija
 WORKDIR /app
 
-# 1. Copiamos los archivos de dependencias
+# Copiar archivos e instalar dependencias
 COPY composer.json composer.lock ./
-
-# 2. Instalamos dependencias SIN ejecutar scripts todavía (evita el error de artisan)
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-# 3. Copiamos el resto del código fuente ahora que el entorno está listo
 COPY . .
-
-# 4. Ahora sí ejecutamos los scripts de Laravel, porque el archivo 'artisan' ya está en /app
 RUN composer run-script post-autoload-dump
 
-# 5. Instalamos Octane después de que el entorno está completo
+# Ahora que bcmath ya está instalado, esto funcionará
 RUN composer require laravel/octane --no-interaction
 
 # --- Etapa 2: Imagen Final (Runner) ---
 FROM dunglas/frankenphp:php8.4-alpine
 
+# Instalar las mismas extensiones
 RUN install-php-extensions pdo_pgsql bcmath intl zip opcache
 
 WORKDIR /app
 
-# Copiamos todo desde el builder (vendor y código fuente)
+# Copiar todo desde el builder
 COPY --from=builder /app /app
 
 # Ajustar permisos
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
-
-# Limpieza
 RUN rm -f /app/bootstrap/cache/packages.php /app/bootstrap/cache/services.php
 
 ENV APP_ENV=production
