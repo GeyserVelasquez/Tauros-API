@@ -40,4 +40,6 @@ ENV FRANKENPHP_CONFIG="worker ./public/index.php"
 
 EXPOSE 8000
 
+RUN chmod +x /usr/local/bin/frankenphp
+
 CMD ["frankenphp", "php-server", "--worker", "./public/index.php", "--host", "0.0.0.0", "--port", "8000"]
