@@ -16,18 +16,19 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # --- Etapa 2: Imagen Final (Runner) ---
-FROM dunglas/frankenphp:latest-alpine
+# Usamos la variante explícita de PHP 8.4
+FROM dunglas/frankenphp:php8.4-alpine
 
-# Instalar extensiones necesarias en la imagen final
+# Instalar extensiones necesarias
 RUN install-php-extensions pdo_pgsql bcmath intl zip opcache
 
 WORKDIR /app
 
-# Copiar las dependencias y el código desde la etapa de construcción
+# Copiar las dependencias y el código
 COPY --from=builder /var/www/html/vendor /app/vendor
 COPY --from=builder /var/www/html /app
 
-# Ajustar permisos para que el servidor pueda escribir en los directorios de Laravel
+# Ajustar permisos
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
 # Configurar variables de entorno para producción
