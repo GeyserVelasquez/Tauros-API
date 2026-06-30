@@ -1,42 +1,27 @@
-# --- Etapa 1: Construcción ---
-FROM php:8.5-fpm-alpine AS builder
+# Imagen optimizada para producción que ya incluye Nginx + PHP 8.4 + Extensiones básicas
+FROM webdevops/php-nginx:8.4-alpine
 
-# Instalar dependencias de desarrollo para compilar
-RUN apk add --no-cache libpng-dev libzip-dev postgresql-dev icu-dev zip unzip git
-RUN docker-php-ext-install pdo pdo_pgsql bcmath intl zip opcache
+# 1. Instalar SOLO el driver de PostgreSQL si no viene por defecto
+RUN apk add --no-cache postgresql-dev \
+    && docker-php-ext-install pdo_pgsql
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# 2. Configurar las variables de entorno nativas de la imagen
+ENV WEB_DOCUMENT_ROOT=/app/public
+ENV APP_ENV=production
 
 WORKDIR /app
+
+# 3. Instalar Composer y dependencias
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+
+# 4. Copiar el resto del proyecto
 COPY . .
-RUN composer install --no-dev --optimize-autoloader --no-scripts
+RUN composer run-script post-autoload-dump
 
-# --- Etapa 2: Imagen Final ---
-FROM php:8.5-fpm-alpine
+# 5. Permisos limpios para los usuarios del servidor
+RUN chown -R application:application /app/storage /app/bootstrap/cache
 
-# 1. Instalar Nginx y las librerías necesarias
-RUN apk add --no-cache nginx libpng libzip libpq icu-libs
-
-# 2. Instalar las dependencias de DESARROLLO solo para compilar las extensiones
-# Usamos un bloque temporal para no inflar la imagen final
-RUN apk add --no-cache --virtual .build-deps \
-    libpng-dev \
-    libzip-dev \
-    postgresql-dev \
-    icu-dev \
-    && docker-php-ext-install pdo pdo_pgsql bcmath intl zip opcache \
-    && apk del .build-deps
-
-WORKDIR /var/www/html
-COPY --from=builder /app .
-
-# Ajustar permisos
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Copiar configuración de Nginx (asegúrate de tenerla en la raíz)
-COPY nginx.conf /etc/nginx/http.d/default.conf
-
-EXPOSE 8000
-
-# Script de inicio: levantamos PHP-FPM y luego Nginx
-CMD php-fpm -D && nginx -g 'daemon off;'
+# El punto de entrada nativo de la imagen gestiona Nginx y FPM correctamente como PID 1
+EXPOSE 80
