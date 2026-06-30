@@ -1,27 +1,27 @@
-# Imagen optimizada para producción que ya incluye Nginx + PHP 8.4 + Extensiones básicas
 FROM webdevops/php-nginx:8.4-alpine
 
-# 1. Instalar SOLO el driver de PostgreSQL si no viene por defecto
+# 1. Instalar dependencias del sistema y drivers
 RUN apk add --no-cache postgresql-dev \
     && docker-php-ext-install pdo_pgsql
 
-# 2. Configurar las variables de entorno nativas de la imagen
+# 2. Configurar el entorno nativo de la imagen
 ENV WEB_DOCUMENT_ROOT=/app/public
 ENV APP_ENV=production
+ENV APP_DEBUG=false
 
 WORKDIR /app
 
-# 3. Instalar Composer y dependencias
+# 3. Preparar dependencias de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-# 4. Copiar el resto del proyecto
+# 4. Copiar código y generar autoloader definitivo
 COPY . .
 RUN composer run-script post-autoload-dump
 
-# 5. Permisos limpios para los usuarios del servidor
+# 5. Asegurar permisos para el usuario nativo de la imagen ('application')
 RUN chown -R application:application /app/storage /app/bootstrap/cache
 
-# El punto de entrada nativo de la imagen gestiona Nginx y FPM correctamente como PID 1
+# Dejamos que la imagen use su puerto 80 por defecto, Render lo mapeará solo.
 EXPOSE 80
