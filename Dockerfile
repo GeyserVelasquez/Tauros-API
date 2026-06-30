@@ -27,8 +27,8 @@ RUN echo '#!/bin/sh' > /opt/docker/provision/entrypoint.d/30-laravel-setup.sh &&
     echo 'php artisan config:cache' >> /opt/docker/provision/entrypoint.d/30-laravel-setup.sh && \
     echo 'php artisan route:cache' >> /opt/docker/provision/entrypoint.d/30-laravel-setup.sh && \
     echo 'php artisan view:cache' >> /opt/docker/provision/entrypoint.d/30-laravel-setup.sh && \
-    echo 'echo "==> Ejecutando migraciones de la base de datos..."' >> /opt/docker/provision/entrypoint.d/30-laravel-setup.sh && \
-    echo 'php artisan migrate --force' >> /opt/docker/provision/entrypoint.d/30-laravel-setup.sh && \
+    echo 'echo "==> Ejecutando migraciones y seeders de la base de datos..."' >> /opt/docker/provision/entrypoint.d/30-laravel-setup.sh && \
+    echo 'php artisan migrate --seed --force' >> /opt/docker/provision/entrypoint.d/30-laravel-setup.sh && \
     chmod +x /opt/docker/provision/entrypoint.d/30-laravel-setup.sh
 
 # 6. Asegurar permisos para el usuario nativo 'application'
