@@ -49,7 +49,7 @@ class SemenBatch extends Model
 
     public function extractions(): MorphMany
     {
-        return $this->morphMany(Extraction::class, 'batch');
+        return $this->morphMany(Extraction::class, 'geneticable');
     }
 
     public function movements(): MorphMany

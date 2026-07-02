@@ -41,9 +41,4 @@ class Batch extends Model
     {
         return $this->hasMany(BatchMovement::class);
     }
-
-    public function extractions(): MorphMany
-    {
-        return $this->morphMany(Extraction::class, 'batch');
-    }
 }

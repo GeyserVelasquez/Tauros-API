@@ -15,9 +15,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['batch_type', 'batch_id', 'technician_id', 'extraction_type_id', 'made_at'])]
-#[Includable(['batch', 'technician', 'extractionType', 'movements'])]
-#[Filterable(['batch_type', 'batch_id', 'technician_id', 'extraction_type_id', 'made_at'])]
+#[Fillable(['geneticable_type', 'geneticable_id', 'technician_id', 'extraction_type_id', 'made_at'])]
+#[Includable(['geneticable', 'technician', 'extractionType', 'movements'])]
+#[Filterable(['geneticable_type', 'geneticable_id', 'technician_id', 'extraction_type_id', 'made_at'])]
 #[Sortable(['id', 'made_at', 'created_at'])]
 #[ObservedBy(ExtractionObserver::class)]
 class Extraction extends Model
@@ -31,7 +31,7 @@ class Extraction extends Model
         ];
     }
 
-    public function batch(): MorphTo
+    public function geneticable(): MorphTo
     {
         return $this->morphTo();
     }
