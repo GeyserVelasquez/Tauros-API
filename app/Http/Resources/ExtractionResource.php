@@ -23,6 +23,7 @@ class ExtractionResource extends JsonResource
             'technician_id' => $this->technician_id,
             'extraction_type_id' => $this->extraction_type_id,
             'made_at' => $this->made_at?->format('Y-m-d'),
+            'quantity' => $this->quantity,
 
             'batch' => $this->whenLoaded('batch', fn () => $this->resolveBatchResource($this->batch)),
 
