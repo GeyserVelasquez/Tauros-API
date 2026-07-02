@@ -7,12 +7,14 @@ use App\Http\Requests\Service\UpdateServiceRequest;
 use App\Http\Resources\ServiceResource;
 use App\Models\Service;
 use App\Services\QueryBuilderService;
+use App\Services\ServiceRegistrationService;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
     public function __construct(
-        protected QueryBuilderService $queryBuilderService
+        protected QueryBuilderService $queryBuilderService,
+        protected ServiceRegistrationService $registrationService
     ) {}
 
     /**
@@ -35,7 +37,7 @@ class ServiceController extends Controller
     {
         $data = $request->validated();
 
-        $service = Service::create($data);
+        $service = $this->registrationService->register($data);
 
         return new ServiceResource($service);
     }
@@ -58,9 +60,9 @@ class ServiceController extends Controller
     {
         $data = $request->validated();
 
-        $service->update($data);
+        $updatedService = $this->registrationService->update($service, $data);
 
-        return new ServiceResource($service);
+        return new ServiceResource($updatedService);
     }
 
     /**

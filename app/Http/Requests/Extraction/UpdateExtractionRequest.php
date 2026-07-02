@@ -19,6 +19,7 @@ class UpdateExtractionRequest extends FormRequest
             'technician_id' => ['sometimes', 'nullable', 'exists:technicians,id'],
             'extraction_type_id' => ['sometimes', 'required', 'exists:extraction_types,id'],
             'made_at' => ['sometimes', 'required', 'date', 'before_or_equal:today'],
+            'quantity' => ['sometimes', 'required', 'integer', 'min:1'],
         ];
     }
 }

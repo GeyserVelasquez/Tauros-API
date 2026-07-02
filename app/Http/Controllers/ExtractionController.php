@@ -7,12 +7,14 @@ use App\Http\Requests\Extraction\UpdateExtractionRequest;
 use App\Http\Resources\ExtractionResource;
 use App\Models\Extraction;
 use App\Services\QueryBuilderService;
+use App\Services\ExtractionRegistrationService;
 use Illuminate\Http\Request;
 
 class ExtractionController extends Controller
 {
     public function __construct(
-        protected QueryBuilderService $queryBuilderService
+        protected QueryBuilderService $queryBuilderService,
+        protected ExtractionRegistrationService $registrationService
     ) {}
 
     /**
@@ -35,7 +37,7 @@ class ExtractionController extends Controller
     {
         $data = $request->validated();
 
-        $extraction = Extraction::create($data);
+        $extraction = $this->registrationService->register($data);
 
         return new ExtractionResource($extraction);
     }
@@ -58,9 +60,9 @@ class ExtractionController extends Controller
     {
         $data = $request->validated();
 
-        $extraction->update($data);
+        $updatedExtraction = $this->registrationService->update($extraction, $data);
 
-        return new ExtractionResource($extraction);
+        return new ExtractionResource($updatedExtraction);
     }
 
     /**
