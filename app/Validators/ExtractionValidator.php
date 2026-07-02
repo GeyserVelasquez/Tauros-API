@@ -3,6 +3,7 @@
 namespace App\Validators;
 
 use App\Models\Extraction;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Validator as FacadeValidator;
 use Illuminate\Validation\ValidationException;
 
@@ -18,8 +19,8 @@ class ExtractionValidator extends Validator
         $data = $extraction->toArray();
 
         $rules = [
-            'batch_type' => ['required', 'string'],
-            'batch_id' => ['required', 'integer'],
+            'geneticable_type' => ['required', 'string'],
+            'geneticable_id' => ['required', 'integer'],
             'extraction_type_id' => ['required', 'exists:extraction_types,id'],
             'technician_id' => ['nullable', 'exists:technicians,id'],
             'made_at' => ['required', 'date', 'before_or_equal:today'],
@@ -36,20 +37,21 @@ class ExtractionValidator extends Validator
 
     private function validateMorphRelationship(Extraction $extraction): void
     {
-        if (!$extraction->batch_type || !$extraction->batch_id) {
+        if (!$extraction->geneticable_type || !$extraction->geneticable_id) {
             return;
         }
 
-        if (!class_exists($extraction->batch_type)) {
+        $modelClass = Relation::getMorphedModel($extraction->geneticable_type) ?? $extraction->geneticable_type;
+
+        if (!class_exists($modelClass)) {
             throw ValidationException::withMessages([
-                'batch_type' => ['El tipo de lote no es válido.'],
+                'geneticable_type' => ['El tipo de lote no es válido.'],
             ]);
         }
 
-        $model = new $extraction->batch_type;
-        if (!$model->where('id', $extraction->batch_id)->exists()) {
+        if (!$modelClass::where('id', $extraction->geneticable_id)->exists()) {
             throw ValidationException::withMessages([
-                'batch_id' => ['El lote seleccionado no existe.'],
+                'geneticable_id' => ['El lote seleccionado no existe.'],
             ]);
         }
     }
