@@ -7,6 +7,7 @@ use App\Models\MovementKardex;
 use App\Enums\MovementType;
 use App\Models\SemenBatch;
 use App\Models\EmbrionBatch;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\DB;
 
 class ExtractionRegistrationService
@@ -30,38 +31,41 @@ class ExtractionRegistrationService
     public function register(array $data): Extraction
     {
         return DB::transaction(function () use ($data) {
-            // Si no se proporcionó batch_id, creamos el lote dinámicamente
-            if (empty($data['batch_id'])) {
+            // Normalizar FQCN a alias de morph map si es necesario
+            $morphMap = Relation::morphMap();
+            $alias = array_search($data['geneticable_type'], $morphMap);
+            $data['geneticable_type'] = $alias !== false ? $alias : $data['geneticable_type'];
+
+            // Si no se proporcionó geneticable_id, creamos el lote dinámicamente
+            if (empty($data['geneticable_id'])) {
                 $batch = $this->createBatch($data);
-                $data['batch_id'] = $batch->id;
-                $data['batch_type'] = get_class($batch);
+                $data['geneticable_id'] = $batch->id;
+                $data['geneticable_type'] = $batch->getMorphClass();
             }
 
             // 1. Crear el registro de extracción
             $extraction = Extraction::create([
-                'batch_type' => $data['batch_type'],
-                'batch_id' => $data['batch_id'],
+                'geneticable_type' => $data['geneticable_type'],
+                'geneticable_id' => $data['geneticable_id'],
                 'made_at' => $data['made_at'],
                 'technician_id' => $data['technician_id'] ?? null,
                 'extraction_type_id' => $data['extraction_type_id'],
             ]);
 
             // 2. Registrar en el Kardex solo si es un tipo de lote inventariable (Semen o Embrión)
-            if (in_array($extraction->batch_type, $this->inventarizableTypes)) {
-                $movement = MovementKardex::create([
-                    'item_type' => $extraction->batch_type,
-                    'item_id' => $extraction->batch_id,
+            if (in_array($extraction->geneticable_type, $this->inventarizableTypes)) {
+                $movement = $extraction->movements()->create([
+                    'item_type' => $extraction->geneticable_type,
+                    'item_id' => $extraction->geneticable_id,
                     'type' => MovementType::INCOME,
                     'quantity' => $data['quantity'], // Unidades de dosis/embriones
-                    'event_type' => Extraction::class,
-                    'event_id' => $extraction->id,
                     'date' => $extraction->made_at,
                 ]);
 
-                $extraction->load(['batch', 'technician', 'extractionType']);
+                $extraction->load(['geneticable', 'technician', 'extractionType']);
                 $extraction->setAttribute('quantity', $movement->quantity);
             } else {
-                $extraction->load(['batch', 'technician', 'extractionType']);
+                $extraction->load(['geneticable', 'technician', 'extractionType']);
                 $extraction->setAttribute('quantity', 0);
             }
 
@@ -79,18 +83,21 @@ class ExtractionRegistrationService
     public function update(Extraction $extraction, array $data): Extraction
     {
         return DB::transaction(function () use ($extraction, $data) {
+            if (isset($data['geneticable_type'])) {
+                $morphMap = Relation::morphMap();
+                $alias = array_search($data['geneticable_type'], $morphMap);
+                $data['geneticable_type'] = $alias !== false ? $alias : $data['geneticable_type'];
+            }
+
             $extraction->update($data);
 
-            if (in_array($extraction->batch_type, $this->inventarizableTypes)) {
+            if (in_array($extraction->geneticable_type, $this->inventarizableTypes)) {
                 if (isset($data['quantity'])) {
                     $movement = $extraction->movements()->updateOrCreate(
+                        [],
                         [
-                            'event_type' => Extraction::class,
-                            'event_id' => $extraction->id,
-                        ],
-                        [
-                            'item_type' => $extraction->batch_type,
-                            'item_id' => $extraction->batch_id,
+                            'item_type' => $extraction->geneticable_type,
+                            'item_id' => $extraction->geneticable_id,
                             'type' => MovementType::INCOME,
                             'quantity' => $data['quantity'],
                             'date' => $extraction->made_at,
@@ -106,7 +113,7 @@ class ExtractionRegistrationService
                 $extraction->setAttribute('quantity', 0);
             }
 
-            return $extraction->load(['batch', 'technician', 'extractionType']);
+            return $extraction->load(['geneticable', 'technician', 'extractionType']);
         });
     }
 
@@ -118,7 +125,7 @@ class ExtractionRegistrationService
      */
     protected function createBatch(array $data)
     {
-        $batchType = $data['batch_type'];
+        $batchType = $data['geneticable_type'];
 
         if ($batchType === SemenBatch::class || $batchType === 'semen_batch') {
             return SemenBatch::create([
