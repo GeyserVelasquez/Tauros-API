@@ -58,7 +58,7 @@ class QueryBuilderService
             $filters = $filterableAttr[0]->newInstance()->filters;
             $allowedFilters = array_map(function ($filter) {
                 // Si el filtro termina en '_id' o es un ID exacto, forzar AllowedFilter::exact()
-                if (str_ends_with($filter, '_id') || $filter === 'id') {
+                if (str_ends_with($filter, '_id') || $filter === 'id' || $filter === 'animal_category') {
                     return AllowedFilter::exact($filter);
                 }
                 return $filter;
