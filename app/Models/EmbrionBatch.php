@@ -42,11 +42,16 @@ class EmbrionBatch extends Model
 
     public function services(): MorphMany
     {
-        return $this->morphMany(Service::class, 'parental');
+        return $this->morphMany(Service::class, 'parentable');
     }
 
     public function extractions(): MorphMany
     {
         return $this->morphMany(Extraction::class, 'batch');
+    }
+
+    public function movements(): MorphMany
+    {
+        return $this->morphMany(MovementKardex::class, 'item');
     }
 }
