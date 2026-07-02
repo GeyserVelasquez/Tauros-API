@@ -33,7 +33,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'receivingMother', 'currentBatchMovement',
 ])]
 
-#[Filterable(['name', 'brand_number', 'electronic_code', 'state_id', 'breed_id', 'color_id', 'entry_cause_id'])]
+#[Filterable(['name', 'brand_number', 'electronic_code', 'state_id', 'breed_id', 'color_id', 'entry_cause_id', 'animal_category'])]
 #[Sortable(['id','brand_number', 'name', 'entry_date', 'birth_date', 'created_at'])]
 
 #[ObservedBy([LivestockObserver::class])]
