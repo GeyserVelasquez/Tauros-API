@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('extractions', function (Blueprint $table) {
             $table->id();
-            $table->morphs('batch');
+            $table->morphs('geneticable');
             $table->date('made_at');
             $table->foreignId('technician_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('extraction_type_id')->constrained('extraction_types')->nullOnDelete();

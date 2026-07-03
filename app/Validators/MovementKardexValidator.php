@@ -17,6 +17,7 @@ use App\Models\Service;
 use App\Models\Birth;
 use App\Enums\MovementType;
 use Illuminate\Support\Facades\Validator as FacadeValidator;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
 
@@ -49,6 +50,14 @@ class MovementKardexValidator extends Validator
     {
         $data = $movementKardex->toArray();
 
+        // Resolver alias polimórficos a FQCNs para que coincidan con $itemMap y $eventMap
+        if (isset($data['item_type'])) {
+            $data['item_type'] = Relation::getMorphedModel($data['item_type']) ?? $data['item_type'];
+        }
+        if (isset($data['event_type'])) {
+            $data['event_type'] = Relation::getMorphedModel($data['event_type']) ?? $data['event_type'];
+        }
+
         $rules = [
             'item_type' => ['required', 'string', Rule::in($this->itemMap)],
             'item_id' => ['required', 'integer'],
@@ -78,6 +87,7 @@ class MovementKardexValidator extends Validator
         $idField = "{$relation}_id";
 
         $modelClass = $movementKardex->$typeField;
+        $modelClass = Relation::getMorphedModel($modelClass) ?? $modelClass;
         
         if (!class_exists($modelClass) || !$modelClass::where('id', $movementKardex->$idField)->exists()) {
             throw ValidationException::withMessages([

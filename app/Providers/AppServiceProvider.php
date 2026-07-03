@@ -31,6 +31,8 @@ class AppServiceProvider extends ServiceProvider
             'abort'         => 'App\Models\Abort',
             'semen_batch'   => 'App\Models\SemenBatch',
             'embrion_batch' => 'App\Models\EmbrionBatch',
+            'service'       => 'App\Models\Service',
+            'extraction'    => 'App\Models\Extraction',
         ]);
 
         Relation::requireMorphMap();

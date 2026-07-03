@@ -6,13 +6,15 @@ use App\Http\Requests\Birth\StoreBirthRequest;
 use App\Http\Requests\Birth\UpdateBirthRequest;
 use App\Http\Resources\BirthResource;
 use App\Models\Birth;
+use App\Services\BirthRegistrationService;
 use App\Services\QueryBuilderService;
 use Illuminate\Http\Request;
 
 class BirthController extends Controller
 {
     public function __construct(
-        protected QueryBuilderService $queryBuilderService
+        protected QueryBuilderService $queryBuilderService,
+        protected BirthRegistrationService $birthRegistrationService
     ) {}
 
     /**
@@ -35,7 +37,7 @@ class BirthController extends Controller
     {
         $data = $request->validated();
 
-        $birth = Birth::create($data);
+        $birth = $this->birthRegistrationService->register($data);
 
         return new BirthResource($birth);
     }

@@ -12,11 +12,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['batch_type', 'batch_id', 'technician_id', 'extraction_type_id', 'made_at'])]
-#[Includable(['batch', 'technician', 'extractionType'])]
-#[Filterable(['batch_type', 'batch_id', 'technician_id', 'extraction_type_id', 'made_at'])]
+#[Fillable(['geneticable_type', 'geneticable_id', 'technician_id', 'extraction_type_id', 'made_at'])]
+#[Includable(['geneticable', 'technician', 'extractionType', 'movements'])]
+#[Filterable(['geneticable_type', 'geneticable_id', 'technician_id', 'extraction_type_id', 'made_at'])]
 #[Sortable(['id', 'made_at', 'created_at'])]
 #[ObservedBy(ExtractionObserver::class)]
 class Extraction extends Model
@@ -30,7 +31,7 @@ class Extraction extends Model
         ];
     }
 
-    public function batch(): MorphTo
+    public function geneticable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -43,5 +44,10 @@ class Extraction extends Model
     public function extractionType(): BelongsTo
     {
         return $this->belongsTo(ExtractionType::class);
+    }
+
+    public function movements(): MorphMany
+    {
+        return $this->morphMany(MovementKardex::class, 'event');
     }
 }

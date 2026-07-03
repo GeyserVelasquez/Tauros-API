@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['mother_id', 'birth_date', 'postbirth_revision_date', 'birth_type_id', 'technician_id'])]
-#[Includable(['mother', 'birthType', 'technician', 'newborns'])]
+#[Includable(['mother', 'birthType', 'technician', 'newborns', 'newborns.livestock'])]
 #[Filterable(['mother_id', 'birth_type_id', 'technician_id', 'birth_date'])]
 #[Sortable(['id', 'birth_date', 'postbirth_revision_date', 'created_at'])]
 #[ObservedBy(BirthObserver::class)]

@@ -3,8 +3,10 @@
 namespace Database\Factories;
 
 use App\Models\Batch;
+use App\Models\EmbrionBatch;
 use App\Models\Extraction;
 use App\Models\ExtractionType;
+use App\Models\SemenBatch;
 use App\Models\Technician;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,8 +23,8 @@ class ExtractionFactory extends Factory
     public function definition(): array
     {
         return [
-            'batch_type' => Batch::class,
-            'batch_id' => Batch::factory(),
+            'geneticable_type' => SemenBatch::class,
+            'geneticable_id' => SemenBatch::factory(),
             'technician_id' => Technician::factory(),
             'extraction_type_id' => ExtractionType::factory(),
             'made_at' => $this->faker->date(),
@@ -32,8 +34,8 @@ class ExtractionFactory extends Factory
     public function forEmbrionBatch(): self
     {
         return $this->state(fn (array $attributes) => [
-            'batch_type' => \App\Models\EmbrionBatch::class,
-            'batch_id' => \App\Models\EmbrionBatch::factory(),
+            'geneticable_type' => EmbrionBatch::class,
+            'geneticable_id' => EmbrionBatch::factory(),
         ]);
     }
 }

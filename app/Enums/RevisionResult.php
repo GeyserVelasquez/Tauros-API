@@ -9,4 +9,6 @@ enum RevisionResult: string
     case EMPTY = 'empty';
 
     case WAITING = 'waiting';
+
+    case HEAT = 'heat';
 }
