@@ -26,13 +26,15 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Relation::enforceMorphMap([
-            'livestock'     => 'App\Models\Livestock',
-            'milking'       => 'App\Models\Milking',
-            'abort'         => 'App\Models\Abort',
-            'semen_batch'   => 'App\Models\SemenBatch',
+            'livestock' => 'App\Models\Livestock',
+            'milking' => 'App\Models\Milking',
+            'abort' => 'App\Models\Abort',
+            'semen_batch' => 'App\Models\SemenBatch',
             'embrion_batch' => 'App\Models\EmbrionBatch',
-            'service'       => 'App\Models\Service',
-            'extraction'    => 'App\Models\Extraction',
+            'service' => 'App\Models\Service',
+            'extraction' => 'App\Models\Extraction',
+            'revision' => 'App\Models\Revision',
+            'birth' => 'App\Models\Birth',
         ]);
 
         Relation::requireMorphMap();
