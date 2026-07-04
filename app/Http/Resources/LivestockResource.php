@@ -27,6 +27,7 @@ class LivestockResource extends JsonResource
             'is_alive' => (bool)$this->is_alive,
             'animal_category' => $this->animal_category?->value,
             'entry_cause_id' => $this->entry_cause_id,
+            'reproductive_status' => $this->reproductive_status,
             'state_id' => $this->state_id,
             'breed_id' => $this->breed_id,
             'color_id' => $this->color_id,
