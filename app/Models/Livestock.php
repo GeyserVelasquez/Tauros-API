@@ -34,7 +34,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 
 #[Filterable(['name', 'brand_number', 'electronic_code', 'state_id', 'breed_id', 'color_id', 'entry_cause_id', 'animal_category'])]
-#[Sortable(['id','brand_number', 'name', 'entry_date', 'birth_date', 'created_at'])]
+#[Sortable(['id', 'brand_number', 'name', 'entry_date', 'birth_date', 'created_at'])]
 
 #[ObservedBy([LivestockObserver::class])]
 class Livestock extends Model
@@ -52,6 +52,16 @@ class Livestock extends Model
             'is_alive' => 'boolean',
             'animal_category' => AnimalCategory::class,
         ];
+    }
+
+    public function scopeAlive($query)
+    {
+        return $query->where('is_alive', true);
+    }
+
+    public function scope($query)
+    {
+        return $query->where('is_alive', true);
     }
 
     public function entryCause(): BelongsTo
@@ -233,5 +243,39 @@ class Livestock extends Model
     public function scopeBornAfter(Builder $query, string $date): Builder
     {
         return $query->where('birth_date', '>=', $date);
+    }
+
+    public function latestEvent(): HasOne
+    {
+        return $this->hasOne(Event::class, 'livestock')->latestOfMany('made_at');
+    }
+
+    public function getReproductiveStatusAttribute(): string
+    {
+        $lastEvent = $this->latestEvent;
+
+        if (! $lastEvent) {
+            return 'empty';
+        }
+
+        $eventable = $lastEvent->eventable;
+
+        if (! $eventable) {
+            return 'empty';
+        }
+
+        if ($eventable instanceof Revision) {
+            return $eventable->revision_result->value;
+        }
+
+        if ($eventable instanceof Abort || $eventable instanceof Birth) {
+            return 'empty';
+        }
+
+        if ($eventable instanceof Service) {
+            return 'waiting';
+        }
+
+        return 'empty';
     }
 }
