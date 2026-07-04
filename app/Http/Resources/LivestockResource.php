@@ -28,7 +28,7 @@ class LivestockResource extends JsonResource
             'animal_category' => $this->animal_category?->value,
             'entry_cause_id' => $this->entry_cause_id,
             'reproductive_status' => $this->reproductive_status,
-            'state_id' => $this->state_id,
+            'state' => $this->state?->value,
             'breed_id' => $this->breed_id,
             'color_id' => $this->color_id,
             'classification_id' => $this->classification_id,
@@ -51,7 +51,6 @@ class LivestockResource extends JsonResource
             'owner' => new OwnerResource($this->whenLoaded('owner')),
             'technician' => new TechnicianResource($this->whenLoaded('technician')),
             'entry_cause' => new EntryCauseResource($this->whenLoaded('entryCause')),
-            'state' => new StateResource($this->whenLoaded('state')),
 
             'batch' => new BatchResource($this->whenLoaded('currentBatchMovement')),
 

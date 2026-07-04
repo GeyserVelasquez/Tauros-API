@@ -10,7 +10,7 @@ use App\Models\Color;
 use App\Models\EntryCause;
 use App\Models\Livestock;
 use App\Models\Owner;
-use App\Models\State;
+use App\Enums\State;
 use App\Models\Technician;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
@@ -44,7 +44,7 @@ class LivestockFactory extends Factory
             'is_enabled' => true,
             'is_alive' => true,
             'entry_cause_id' => EntryCause::factory(),
-            'state_id' => State::factory(),
+            'state' => $this->faker->randomElement(State::cases()),
             'animal_category' => $animal_category,
             'breed_id' => Breed::factory(),
             'color_id' => Color::factory(),

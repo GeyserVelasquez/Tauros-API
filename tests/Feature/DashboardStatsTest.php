@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\AnimalCategory;
 use App\Enums\RevisionResult;
+use App\Enums\State;
 use App\Models\Birth;
 use App\Models\Livestock;
 use App\Models\Revision;
@@ -38,6 +39,20 @@ class DashboardStatsTest extends TestCase
                 'category_distribution' => [
                     '*' => [
                         'category',
+                        'count',
+                        'percentage',
+                    ],
+                ],
+                'health_status' => [
+                    '*' => [
+                        'category',
+                        'count',
+                        'percentage',
+                    ],
+                ],
+                'reproductive_status_distribution' => [
+                    '*' => [
+                        'status',
                         'count',
                         'percentage',
                     ],
@@ -196,5 +211,29 @@ class DashboardStatsTest extends TestCase
 
         $this->assertEquals(0, $heatEntry['count']);
         $this->assertEquals(0.0, $heatEntry['percentage']);
+    }
+
+    public function test_health_status_distribution_returns_correct_percentages(): void
+    {
+        Livestock::factory()->count(2)->create(['state' => State::HEALTHY]);
+        Livestock::factory()->count(3)->create(['state' => State::SICK]);
+
+        $route = route('dashboard-stats.index');
+
+        $response = $this->actingAs($this->user)
+            ->getJson($route);
+
+        $response->assertStatus(200);
+
+        $distribution = $response->json('data.health_status');
+
+        $healthyEntry = collect($distribution)->firstWhere('category', State::HEALTHY->value);
+        $sickEntry = collect($distribution)->firstWhere('category', State::SICK->value);
+
+        $this->assertEquals(2, $healthyEntry['count']);
+        $this->assertEquals(40.0, $healthyEntry['percentage']);
+
+        $this->assertEquals(3, $sickEntry['count']);
+        $this->assertEquals(60.0, $sickEntry['percentage']);
     }
 }

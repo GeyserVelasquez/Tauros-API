@@ -18,7 +18,6 @@ use App\Models\OutcomeType;
 use App\Models\ProductType;
 use App\Models\RevisionType;
 use App\Models\ServiceType;
-use App\Models\State;
 use App\Models\SupplyType;
 use App\Models\Technician;
 use Illuminate\Database\Seeder;
@@ -37,12 +36,7 @@ class LookUpTablesSeeder extends Seeder
                 ['code' => 'GIFT', 'name' => 'Regalo'],
                 ['code' => 'TRANSFER', 'name' => 'Traspaso'],
             ],
-            State::class => [
-                ['code' => 'HEALTHY', 'name' => 'Sano'],
-                ['code' => 'SICK', 'name' => 'Enfermo'],
-                ['code' => 'TREATMENT', 'name' => 'En Tratamiento'],
-                ['code' => 'QUARANTINE', 'name' => 'En Cuarentena'],
-            ],
+
             Classification::class => [
                 ['code' => 'GOOD', 'name' => 'Bueno'],
                 ['code' => 'REGULAR', 'name' => 'Regular'],

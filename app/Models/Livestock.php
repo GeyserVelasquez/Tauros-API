@@ -6,6 +6,7 @@ use App\Attributes\Filterable;
 use App\Attributes\Includable;
 use App\Attributes\Sortable;
 use App\Enums\AnimalCategory;
+use App\Enums\State;
 use App\Observers\LivestockObserver;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -22,18 +23,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[Fillable([
     'brand_number', 'electronic_code', 'name', 'entry_date', 'birth_date',
     'general_comment', 'tits', 'is_enabled', 'is_alive', 'entry_cause_id',
-    'state_id', 'animal_category', 'breed_id', 'color_id', 'classification_id',
+    'state', 'animal_category', 'breed_id', 'color_id', 'classification_id',
     'owner_id', 'technician_id', 'father_id', 'mother_id',
     'adoptive_mother_id', 'receiving_mother_id',
 ])]
 
 #[Includable([
-    'entryCause', 'state', 'breed', 'color', 'classification', 'owner',
+    'entryCause', 'breed', 'color', 'classification', 'owner',
     'technician', 'batch', 'father', 'mother', 'adoptiveMother',
     'receivingMother', 'currentBatchMovement',
 ])]
 
-#[Filterable(['name', 'brand_number', 'electronic_code', 'state_id', 'breed_id', 'color_id', 'entry_cause_id', 'animal_category'])]
+#[Filterable(['name', 'brand_number', 'electronic_code', 'state', 'breed_id', 'color_id', 'entry_cause_id', 'animal_category'])]
 #[Sortable(['id', 'brand_number', 'name', 'entry_date', 'birth_date', 'created_at'])]
 
 #[ObservedBy([LivestockObserver::class])]
@@ -51,6 +52,7 @@ class Livestock extends Model
             'is_enabled' => 'boolean',
             'is_alive' => 'boolean',
             'animal_category' => AnimalCategory::class,
+            'state' => State::class,
         ];
     }
 
@@ -67,11 +69,6 @@ class Livestock extends Model
     public function entryCause(): BelongsTo
     {
         return $this->belongsTo(EntryCause::class);
-    }
-
-    public function state(): BelongsTo
-    {
-        return $this->belongsTo(State::class);
     }
 
     public function breed(): BelongsTo

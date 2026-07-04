@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Enums\AnimalCategory;
+use App\Enums\State;
 
 return new class extends Migration
 {
@@ -28,7 +29,7 @@ return new class extends Migration
             $table->boolean('is_alive')->default(true);
 
             $table->foreignId('entry_cause_id')->constrained();
-            $table->foreignId('state_id')->constrained();
+            $table->enum('state', State::cases());
             $table->enum('animal_category', AnimalCategory::cases());
             $table->foreignId('breed_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('color_id')->nullable()->constrained()->nullOnDelete();

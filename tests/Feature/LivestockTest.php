@@ -40,7 +40,7 @@ class LivestockTest extends TestCase
                     'is_enabled',
                     'is_alive',
                     'entry_cause_id',
-                    'state_id',
+                    'state',
                     'animal_category',
                     'breed_id',
                     'color_id',
@@ -59,7 +59,7 @@ class LivestockTest extends TestCase
     public function test_users_can_get_a_list_of_livestock_with_includes(): void
     {
         $livestock = Livestock::factory(3)->create();
-        $includedRelationships = 'breed,classification,color,entryCause,owner,state,technician';
+        $includedRelationships = 'breed,classification,color,entryCause,owner,technician';
 
         $route = route('livestock.index', [
             'include' => $includedRelationships
@@ -85,7 +85,7 @@ class LivestockTest extends TestCase
                     'is_enabled',
                     'is_alive',
                     'entry_cause_id',
-                    'state_id',
+                    'state',
                     'animal_category',
                     'breed_id',
                     'color_id',
@@ -128,11 +128,6 @@ class LivestockTest extends TestCase
                         'code',
                         'name',
                     ],
-                    'state' => [
-                        'id',
-                        'code',
-                        'name',
-                    ],
                 ]
             ]
         ]);
@@ -167,7 +162,7 @@ class LivestockTest extends TestCase
                 'is_enabled',
                 'is_alive',
                 'entry_cause_id',
-                'state_id',
+                'state',
                 'animal_category',
                 'breed_id',
                 'color_id',
@@ -186,7 +181,7 @@ class LivestockTest extends TestCase
     public function test_users_can_get_a_single_livestock_with_includes(): void
     {
         $livestock = Livestock::factory()->create();
-        $includedRelationships = 'breed,classification,color,entryCause,owner,state,technician';
+        $includedRelationships = 'breed,classification,color,entryCause,owner,technician';
 
         $route = route('livestock.show', [
             'livestock' => $livestock,
@@ -215,7 +210,7 @@ class LivestockTest extends TestCase
                 'is_enabled',
                 'is_alive',
                 'entry_cause_id',
-                'state_id',
+                'state',
                 'animal_category',
                 'breed_id',
                 'color_id',
@@ -255,11 +250,6 @@ class LivestockTest extends TestCase
                     'telephone',
                 ],
                 'entry_cause' => [
-                    'id',
-                    'code',
-                    'name',
-                ],
-                'state' => [
                     'id',
                     'code',
                     'name',

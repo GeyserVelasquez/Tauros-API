@@ -10,7 +10,7 @@ use App\Models\Color;
 use App\Models\EntryCause;
 use App\Models\Livestock;
 use App\Models\Owner;
-use App\Models\State;
+use App\Enums\State;
 use App\Models\Technician;
 use Illuminate\Database\Seeder;
 
@@ -22,7 +22,6 @@ class LivestockSeeder extends Seeder
     public function run(): void
     {
         $entryCause = EntryCause::where('code', 'BORN')->first();
-        $state = State::where('code', 'HEALTHY')->first();
         $breed = Breed::where('code', 'HOLSTEIN')->first();
         $color = Color::where('code', 'WHITE')->first();
         $classification = Classification::where('code', 'GOOD')->first();
@@ -36,7 +35,7 @@ class LivestockSeeder extends Seeder
                 'entry_date' => now(),
                 'birth_date' => now()->subYears(3),
                 'entry_cause_id' => $entryCause->id,
-                'state_id' => $state->id,
+                'state' => State::HEALTHY,
                 'animal_category' => AnimalCategory::COW,
                 'breed_id' => $breed->id,
                 'color_id' => $color->id,
@@ -50,7 +49,7 @@ class LivestockSeeder extends Seeder
                 'entry_date' => now(),
                 'birth_date' => now()->subYears(2),
                 'entry_cause_id' => $entryCause->id,
-                'state_id' => $state->id,
+                'state' => State::HEALTHY,
                 'animal_category' => AnimalCategory::HEIFER,
                 'breed_id' => $breed->id,
                 'color_id' => $color->id,

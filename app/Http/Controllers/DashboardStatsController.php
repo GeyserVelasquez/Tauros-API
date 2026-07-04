@@ -13,14 +13,6 @@ class DashboardStatsController extends Controller
      */
     public function index(Request $request, DashboardStatsService $service): JsonResponse
     {
-        $categoryDistribution = $service->getAnimalCategoryDistribution();
-        $reproductiveStatusDistribution = $service->getReproductiveStatusDistribution();
-
-        return response()->json([
-            'data' => [
-                'category_distribution' => $categoryDistribution,
-                'reproductive_status_distribution' => $reproductiveStatusDistribution,
-            ],
-        ]);
+        return response()->json($service->getData());
     }
 }

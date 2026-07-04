@@ -41,7 +41,6 @@ use App\Http\Controllers\RevisionTypeController;
 use App\Http\Controllers\SemenBatchController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceTypeController;
-use App\Http\Controllers\StateController;
 use App\Http\Controllers\SupplyController;
 use App\Http\Controllers\SupplyMovementController;
 use App\Http\Controllers\SupplyTypeController;
@@ -98,14 +97,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('semen-batches', SemenBatchController::class);
     Route::apiResource('services', ServiceController::class);
     Route::apiResource('service-types', ServiceTypeController::class);
-    Route::apiResource('states', StateController::class);
     Route::apiResource('supplies', SupplyController::class);
     Route::apiResource('supply-movements', SupplyMovementController::class);
     Route::apiResource('supply-types', SupplyTypeController::class);
     Route::apiResource('technicians', TechnicianController::class);
     Route::apiResource('teasings', TeasingController::class);
 
-    Route::get('dashboard-stats', [DashboardStatsController::class, 'index'])
+    Route::get('dashboard/stats', [DashboardStatsController::class, 'index'])
         ->name('dashboard-stats.index');
 
 });
