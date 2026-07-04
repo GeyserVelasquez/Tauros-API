@@ -1,24 +1,21 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\AbortController;
+use App\Http\Controllers\AbortTypeController;
 use App\Http\Controllers\BatchController;
 use App\Http\Controllers\BatchMovementController;
 use App\Http\Controllers\BirthController;
-use App\Http\Controllers\CertificateController;
-use App\Http\Controllers\LivestockController;
-use App\Http\Controllers\AbortTypeController;
 use App\Http\Controllers\BirthTypeController;
 use App\Http\Controllers\BreedController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ClassificationController;
+use App\Http\Controllers\ClinicalTreatmentController;
 use App\Http\Controllers\ClinicDiagnosticController;
 use App\Http\Controllers\ClinicHistoryController;
-use App\Http\Controllers\EmbrionBatchController;
-use App\Http\Controllers\ClinicalTreatmentController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DashboardStatsController;
+use App\Http\Controllers\EmbrionBatchController;
 use App\Http\Controllers\EmbrionExtractionTypeController;
 use App\Http\Controllers\EntryCauseController;
 use App\Http\Controllers\ExtractionController;
@@ -27,6 +24,7 @@ use App\Http\Controllers\GrowthController;
 use App\Http\Controllers\GrowthTypeController;
 use App\Http\Controllers\HerdController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\LivestockController;
 use App\Http\Controllers\MilkingController;
 use App\Http\Controllers\MilkingTypeController;
 use App\Http\Controllers\MovementKardexController;
@@ -49,6 +47,8 @@ use App\Http\Controllers\SupplyMovementController;
 use App\Http\Controllers\SupplyTypeController;
 use App\Http\Controllers\TeasingController;
 use App\Http\Controllers\TechnicianController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 require __DIR__.'/auth.php';
 
@@ -104,5 +104,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('supply-types', SupplyTypeController::class);
     Route::apiResource('technicians', TechnicianController::class);
     Route::apiResource('teasings', TeasingController::class);
+
+    Route::get('dashboard-stats', [DashboardStatsController::class, 'index'])
+        ->name('dashboard-stats.index');
 
 });
