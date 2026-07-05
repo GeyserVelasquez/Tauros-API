@@ -33,6 +33,8 @@ class StoreClinicHistoryRequest extends FormRequest
             'treatments.*.is_recurring' => ['boolean'],
             'treatments.*.frequency_hours' => ['required_if:treatments.*.is_recurring,true', 'nullable', 'integer', 'min:1'],
             'treatments.*.total_doses' => ['required_if:treatments.*.is_recurring,true', 'nullable', 'integer', 'min:1'],
+            'treatments.*.first_dose_date' => ['nullable', 'date'],
+            'treatments.*.is_first_dose_applied' => ['boolean'],
         ];
     }
 }
