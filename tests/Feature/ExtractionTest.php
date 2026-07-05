@@ -322,7 +322,7 @@ class ExtractionTest extends TestCase
         $payload = [
             'geneticable_type' => 'semen_batch',
             'code' => 'SEM-UPD-01',
-            'livestock_id' => $bull->id,
+            'female_id' => $bull->id,
             'extraction_type_id' => $type->id,
             'made_at' => now()->toDateString(),
             'quantity' => 10,

@@ -11,7 +11,7 @@ use App\Models\EmbrionExtractionType;
 use App\Models\EntryCause;
 use App\Models\ExtractionType;
 use App\Models\GrowthType;
-use App\Models\Herd;
+use App\Models\Paddock;
 use App\Models\MilkingType;
 use App\Models\NewbornType;
 use App\Models\OutcomeType;
@@ -116,10 +116,10 @@ class LookUpTablesSeeder extends Seeder
                 ['code' => 'SURGICAL', 'name' => 'Quirúrgica'],
                 ['code' => 'NON-SURGICAL', 'name' => 'No Quirúrgica'],
             ],
-            Herd::class => [
-                ['code' => 'MAIN', 'name' => 'Hato Principal'],
-                ['code' => 'NORTH', 'name' => 'Hato Norte'],
-                ['code' => 'SOUTH', 'name' => 'Hato Sur'],
+            Paddock::class => [
+                ['code' => 'MAIN', 'name' => 'Potrero Principal'],
+                ['code' => 'NORTH', 'name' => 'Potrero Norte'],
+                ['code' => 'SOUTH', 'name' => 'Potrero Sur'],
             ],
             Technician::class => [
                 ['code' => 'V-14789456', 'name' => 'Técnico Principal', 'telephone' => '+584123456789'],
