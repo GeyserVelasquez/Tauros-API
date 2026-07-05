@@ -29,6 +29,18 @@ class UpdateClinicHistoryRequest extends FormRequest
             'attributes' => ['sometimes', 'nullable', 'array'],
             'livestock_id' => ['sometimes', 'required', 'exists:livestock,id'],
             'technician_id' => ['sometimes', 'nullable', 'exists:technicians,id'],
+
+            'diagnostics' => ['sometimes', 'required', 'array', 'min:1'],
+            'diagnostics.*' => ['exists:clinic_diagnostics,id'],
+
+            'treatments' => ['sometimes', 'required', 'array', 'min:1'],
+            'treatments.*.clinical_treatment_id' => ['required', 'exists:clinical_treatments,id'],
+            'treatments.*.supply_id' => ['nullable', 'exists:supplies,id'],
+            'treatments.*.quantity' => ['required', 'numeric', 'min:0.01'],
+
+            'treatments.*.is_recurring' => ['boolean'],
+            'treatments.*.frequency_hours' => ['required_if:treatments.*.is_recurring,true', 'nullable', 'integer', 'min:1'],
+            'treatments.*.total_doses' => ['required_if:treatments.*.is_recurring,true', 'nullable', 'integer', 'min:1'],
         ];
     }
 }
