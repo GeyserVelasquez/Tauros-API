@@ -42,7 +42,23 @@ class ClinicHistoryTest extends TestCase
 
     public function test_users_can_create_a_new_clinic_history(): void
     {
-        $payload = ClinicHistory::factory()->raw();
+        $diagnostic = \App\Models\ClinicDiagnostic::factory()->create();
+        $treatment = \App\Models\ClinicalTreatment::factory()->create();
+        $supply = \App\Models\Supply::factory()->create();
+
+        $payload = ClinicHistory::factory()->raw([
+            'diagnostics' => [$diagnostic->id],
+            'treatments' => [
+                [
+                    'clinical_treatment_id' => $treatment->id,
+                    'supply_id' => $supply->id,
+                    'quantity' => 2.50,
+                    'is_recurring' => true,
+                    'frequency_hours' => 24,
+                    'total_doses' => 2,
+                ]
+            ]
+        ]);
 
         $route = route('clinic-histories.store');
 
@@ -54,6 +70,9 @@ class ClinicHistoryTest extends TestCase
         $this->assertDatabaseHas('clinic_histories', [
             'code' => $payload['code']
         ]);
+
+        // Assert treatment applications were generated
+        $this->assertDatabaseCount('treatment_applications', 2);
     }
 
     public function test_it_fails_if_code_already_exists(): void
