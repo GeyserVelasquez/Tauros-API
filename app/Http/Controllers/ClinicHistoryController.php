@@ -50,8 +50,11 @@ class ClinicHistoryController extends Controller
                     $totalDoses = $isRecurring ? ($treatment['total_doses'] ?? 1) : 1;
                     $frequencyHours = $isRecurring ? ($treatment['frequency_hours'] ?? 24) : 24;
 
+                    $startDate = isset($treatment['first_dose_date']) ? \Illuminate\Support\Carbon::parse($treatment['first_dose_date']) : now();
+                    $isFirstDoseApplied = $treatment['is_first_dose_applied'] ?? true;
+
                     for ($i = 1; $i <= $totalDoses; $i++) {
-                        $scheduledDate = now()->addHours(($i - 1) * $frequencyHours);
+                        $scheduledDate = $startDate->copy()->addHours(($i - 1) * $frequencyHours);
                         
                         $app = \App\Models\TreatmentApplication::create([
                             'livestock_id' => $clinicHistory->livestock_id,
@@ -63,7 +66,7 @@ class ClinicHistoryController extends Controller
                             'clinic_history_id' => $clinicHistory->id,
                         ]);
 
-                        if ($i === 1) {
+                        if ($i === 1 && $isFirstDoseApplied) {
                             $app->apply(
                                 $clinicHistory->technician_id ?? auth()->id() ?? 1,
                                 (int) round($treatment['quantity'] * 100)
@@ -116,6 +119,9 @@ class ClinicHistoryController extends Controller
                     $totalDoses = $isRecurring ? ($treatment['total_doses'] ?? 1) : 1;
                     $frequencyHours = $isRecurring ? ($treatment['frequency_hours'] ?? 24) : 24;
 
+                    $startDate = isset($treatment['first_dose_date']) ? \Illuminate\Support\Carbon::parse($treatment['first_dose_date']) : now();
+                    $isFirstDoseApplied = $treatment['is_first_dose_applied'] ?? true;
+
                     for ($i = 1; $i <= $totalDoses; $i++) {
                         // Check if we already have an applied dose for this treatment
                         $alreadyApplied = $clinicHistory->treatmentApplications()
@@ -128,7 +134,7 @@ class ClinicHistoryController extends Controller
                             continue;
                         }
 
-                        $scheduledDate = now()->addHours(($i - 1) * $frequencyHours);
+                        $scheduledDate = $startDate->copy()->addHours(($i - 1) * $frequencyHours);
 
                         $app = \App\Models\TreatmentApplication::create([
                             'livestock_id' => $clinicHistory->livestock_id,
@@ -140,7 +146,7 @@ class ClinicHistoryController extends Controller
                             'clinic_history_id' => $clinicHistory->id,
                         ]);
 
-                        if ($i === 1) {
+                        if ($i === 1 && $isFirstDoseApplied) {
                             $app->apply(
                                 $clinicHistory->technician_id ?? auth()->id() ?? 1,
                                 (int) round($treatment['quantity'] * 100)
