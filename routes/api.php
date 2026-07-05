@@ -46,6 +46,7 @@ use App\Http\Controllers\SupplyMovementController;
 use App\Http\Controllers\SupplyTypeController;
 use App\Http\Controllers\TeasingController;
 use App\Http\Controllers\TechnicianController;
+use App\Http\Controllers\TreatmentApplicationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -102,6 +103,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('supply-types', SupplyTypeController::class);
     Route::apiResource('technicians', TechnicianController::class);
     Route::apiResource('teasings', TeasingController::class);
+    Route::apiResource('treatment-applications', TreatmentApplicationController::class)->except(['store', 'update']);
+    Route::post('treatment-applications/{treatment_application}/apply', [TreatmentApplicationController::class, 'apply'])->name('treatment-applications.apply');
+    Route::post('treatment-applications/{treatment_application}/unapply', [TreatmentApplicationController::class, 'unapply'])->name('treatment-applications.unapply');
 
     Route::get('dashboard/stats', [DashboardStatsController::class, 'index'])
         ->name('dashboard-stats.index');
