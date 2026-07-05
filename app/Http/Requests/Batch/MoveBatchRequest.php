@@ -4,9 +4,8 @@ namespace App\Http\Requests\Batch;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class StoreBatchRequest extends FormRequest
+class MoveBatchRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -16,20 +15,14 @@ class StoreBatchRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('batches', 'code')
-            ],
-            'name' => [
-                'required',
-                'string',
-                'max:255'
-            ],
             'paddock_id' => [
-                'nullable', 'exists:paddocks,id'
-            ]
+                'required',
+                'exists:paddocks,id',
+            ],
+            'made_at' => [
+                'required',
+                'date',
+            ],
         ];
     }
 }

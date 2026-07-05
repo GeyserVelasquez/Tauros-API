@@ -9,35 +9,33 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['code', 'name', 'herd_id'])]
-#[Includable(['herd', 'livestock', 'batchMovements', 'extractions'])]
-#[Filterable(['code', 'name', 'herd_id'])]
+#[Fillable(['code', 'name', 'paddock_id'])]
+#[Includable(['paddock', 'livestock', 'batchMovements', 'batchPaddockMovements'])]
+#[Filterable(['code', 'name', 'paddock_id'])]
 #[Sortable(['id', 'code', 'name', 'created_at'])]
 class Batch extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public function herd(): BelongsTo
+    public function paddock(): BelongsTo
     {
-        return $this->belongsTo(Herd::class);
+        return $this->belongsTo(Paddock::class);
     }
 
-    public function livestock(): BelongsToMany
+    public function livestock(): HasMany
     {
-        return $this->belongsToMany(Livestock::class);
+        return $this->hasMany(Livestock::class);
     }
 
-    public function batchMovements(): BelongsTo
+    public function batchPaddockMovements(): HasMany
     {
-        return $this->belongsTo(BatchMovement::class);
+        return $this->hasMany(BatchPaddockMovement::class);
     }
 
-    public function batchMovement(): HasMany
+    public function batchMovements(): HasMany
     {
         return $this->hasMany(BatchMovement::class);
     }
