@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['code', 'name', 'description', 'attributes', 'livestock_id', 'technician_id'])]
-#[Includable(['livestock', 'technician', 'clinicDiagnostics', 'clinicalTreatments'])]
+#[Includable(['livestock', 'technician', 'clinicDiagnostics', 'clinicalTreatments', 'treatmentApplications'])]
 #[Filterable(['code', 'name', 'livestock_id', 'technician_id'])]
 #[Sortable(['id', 'code', 'name', 'created_at'])]
 #[ObservedBy(ClinicHistoryObserver::class)]
@@ -49,6 +49,11 @@ class ClinicHistory extends Model
     public function clinicalTreatments(): BelongsToMany
     {
         return $this->belongsToMany(ClinicalTreatment::class, 'clinic_history_treatments');
+    }
+
+    public function treatmentApplications(): HasMany
+    {
+        return $this->hasMany(TreatmentApplication::class);
     }
 
     public function aborts(): HasMany
