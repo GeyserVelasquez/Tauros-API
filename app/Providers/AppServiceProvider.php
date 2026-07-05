@@ -35,6 +35,11 @@ class AppServiceProvider extends ServiceProvider
             'extraction' => 'App\Models\Extraction',
             'revision' => 'App\Models\Revision',
             'birth' => 'App\Models\Birth',
+            'treatment_application' => 'App\Models\TreatmentApplication',
+            'sanitary_plan' => 'App\Models\SanitaryPlan',
+            'supply' => 'App\Models\Supply',
+            'product' => 'App\Models\Product',
+            'clinic_history' => 'App\Models\ClinicHistory',
         ]);
 
         Relation::requireMorphMap();

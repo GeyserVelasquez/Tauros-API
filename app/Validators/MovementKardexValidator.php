@@ -39,6 +39,8 @@ class MovementKardexValidator extends Validator
         Extraction::class,
         Service::class,
         Birth::class,
+        \App\Models\TreatmentApplication::class,
+        \App\Models\SanitaryPlan::class,
     ];
 
     /**
@@ -65,7 +67,7 @@ class MovementKardexValidator extends Validator
             'event_id' => ['nullable', 'integer'],
             'type' => ['required', Rule::enum(MovementType::class)],
             'quantity' => ['required', 'integer', 'min:1'],
-            'date' => ['required', 'date', 'before_or_equal:today'],
+            'date' => ['required', 'date', 'before_or_equal:now'],
         ];
 
         $validator = FacadeValidator::make($data, $rules);
