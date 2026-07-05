@@ -22,7 +22,7 @@ use App\Http\Controllers\ExtractionController;
 use App\Http\Controllers\ExtractionTypeController;
 use App\Http\Controllers\GrowthController;
 use App\Http\Controllers\GrowthTypeController;
-use App\Http\Controllers\HerdController;
+use App\Http\Controllers\PaddockController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LivestockController;
 use App\Http\Controllers\MilkingController;
@@ -65,6 +65,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('breeds', BreedController::class);
     Route::apiResource('certificates', CertificateController::class);
     Route::apiResource('batches', BatchController::class);
+    Route::post('batches/{batch}/move', [BatchController::class, 'move'])->name('batches.move');
     Route::apiResource('batch-movements', BatchMovementController::class);
     Route::apiResource('classifications', ClassificationController::class);
     Route::apiResource('clinic-diagnostics', ClinicDiagnosticController::class);
@@ -79,12 +80,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('growths', GrowthController::class);
     Route::apiResource('extraction-types', ExtractionTypeController::class);
     Route::apiResource('growth-types', GrowthTypeController::class);
-    Route::apiResource('herds', HerdController::class);
+
     Route::apiResource('images', ImageController::class);
     Route::apiResource('milking-types', MilkingTypeController::class);
     Route::apiResource('milkings', MilkingController::class);
     Route::apiResource('movement-kardex', MovementKardexController::class);
     Route::apiResource('livestock', LivestockController::class);
+    Route::post('livestock/{livestock}/move-paddock', [LivestockController::class, 'movePaddock'])->name('livestock.move-paddock');
+    Route::post('livestock/{livestock}/move-batch', [LivestockController::class, 'moveBatch'])->name('livestock.move-batch');
+    Route::apiResource('paddocks', PaddockController::class);
     Route::apiResource('newborns', NewbornController::class);
     Route::apiResource('newborn-types', NewbornTypeController::class);
     Route::apiResource('outcomes', OutcomeController::class);

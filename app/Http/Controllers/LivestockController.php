@@ -4,15 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Livestock\StoreLivestockRequest;
 use App\Http\Requests\Livestock\UpdateLivestockRequest;
+use App\Http\Requests\Livestock\MoveLivestockPaddockRequest;
+use App\Http\Requests\Livestock\MoveLivestockBatchRequest;
 use App\Http\Resources\LivestockResource;
 use App\Models\Livestock;
+use App\Models\Paddock;
+use App\Models\Batch;
 use App\Services\QueryBuilderService;
+use App\Services\LivestockMovementService;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class LivestockController extends Controller
 {
     public function __construct(
-        protected QueryBuilderService $queryBuilderService
+        protected QueryBuilderService $queryBuilderService,
+        protected LivestockMovementService $livestockMovementService
     ) {}
 
     /**
@@ -71,5 +78,37 @@ class LivestockController extends Controller
         $livestock->delete();
 
         return response(null, 204);
+    }
+
+    /**
+     * Move livestock to a paddock.
+     */
+    public function movePaddock(MoveLivestockPaddockRequest $request, Livestock $livestock): LivestockResource
+    {
+        $paddock = Paddock::findOrFail($request->input('paddock_id'));
+        $madeAt = Carbon::parse($request->input('made_at'));
+
+        $this->livestockMovementService->moveToPaddock($livestock, $paddock, $madeAt);
+
+        $loadedLivestock = $this->queryBuilderService->buildForModel($livestock, $request)
+            ->firstOrFail();
+
+        return new LivestockResource($loadedLivestock);
+    }
+
+    /**
+     * Move livestock to a batch.
+     */
+    public function moveBatch(MoveLivestockBatchRequest $request, Livestock $livestock): LivestockResource
+    {
+        $batch = Batch::findOrFail($request->input('batch_id'));
+        $madeAt = Carbon::parse($request->input('made_at'));
+
+        $this->livestockMovementService->moveToBatch($livestock, $batch, $madeAt);
+
+        $loadedLivestock = $this->queryBuilderService->buildForModel($livestock, $request)
+            ->firstOrFail();
+
+        return new LivestockResource($loadedLivestock);
     }
 }

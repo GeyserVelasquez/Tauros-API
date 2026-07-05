@@ -25,16 +25,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'general_comment', 'tits', 'is_enabled', 'is_alive', 'entry_cause_id',
     'state', 'animal_category', 'breed_id', 'color_id', 'classification_id',
     'owner_id', 'technician_id', 'father_id', 'mother_id',
-    'adoptive_mother_id', 'receiving_mother_id',
+    'adoptive_mother_id', 'receiving_mother_id', 'batch_id', 'paddock_id',
 ])]
 
 #[Includable([
     'entryCause', 'breed', 'color', 'classification', 'owner',
-    'technician', 'batch', 'father', 'mother', 'adoptiveMother',
-    'receivingMother', 'currentBatchMovement',
+    'technician', 'batch', 'paddock', 'father', 'mother', 'adoptiveMother',
+    'receivingMother', 'currentBatchMovement', 'paddockMovements',
 ])]
 
-#[Filterable(['name', 'brand_number', 'electronic_code', 'state', 'breed_id', 'color_id', 'entry_cause_id', 'animal_category'])]
+#[Filterable(['name', 'brand_number', 'electronic_code', 'state', 'breed_id', 'color_id', 'entry_cause_id', 'animal_category', 'batch_id', 'paddock_id'])]
 #[Sortable(['id', 'brand_number', 'name', 'entry_date', 'birth_date', 'created_at'])]
 
 #[ObservedBy([LivestockObserver::class])]
@@ -234,6 +234,22 @@ class Livestock extends Model
     public function batches(): BelongsToMany
     {
         return $this->belongsToMany(Batch::class, 'batch_movements')
+            ->withTimestamps();
+    }
+
+    public function paddock(): BelongsTo
+    {
+        return $this->belongsTo(Paddock::class);
+    }
+
+    public function paddockMovements(): HasMany
+    {
+        return $this->hasMany(PaddockMovement::class);
+    }
+
+    public function paddocks(): BelongsToMany
+    {
+        return $this->belongsToMany(Paddock::class, 'paddock_movements')
             ->withTimestamps();
     }
 
