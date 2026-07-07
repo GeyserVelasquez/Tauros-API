@@ -6,7 +6,7 @@ use App\Models\MovementKardex;
 use App\Models\Supply;
 use App\Models\SupplyMovement;
 use App\Models\Product;
-use App\Models\Outcome;
+use App\Models\ProductMovement;
 use App\Enums\MovementType;
 use Tests\TestCase;
 
@@ -111,13 +111,15 @@ class MovementKardexTest extends TestCase
     public function test_it_validates_polymorphic_item_and_event(): void
     {
         $product = Product::factory()->create();
-        $outcome = Outcome::factory()->create();
+        $movement = ProductMovement::factory()->create([
+            'product_id' => $product->id,
+        ]);
         
         $payload = MovementKardex::factory()->raw([
-            'item_type' => Product::class,
+            'item_type' => $product->getMorphClass(),
             'item_id' => $product->id,
-            'event_type' => Outcome::class,
-            'event_id' => $outcome->id,
+            'event_type' => $movement->getMorphClass(),
+            'event_id' => $movement->id,
             'type' => MovementType::OUTCOME->value
         ]);
 
@@ -127,5 +129,67 @@ class MovementKardexTest extends TestCase
             ->postJson($route, $payload);
 
         $response->assertStatus(201);
+    }
+
+    public function test_with_stock_scope_calculates_correct_stock_for_products_and_supplies(): void
+    {
+        $product = Product::factory()->create();
+
+        // 100 income, 30 outcome, 10 loss => stock should be 60
+        MovementKardex::factory()->create([
+            'item_type' => $product->getMorphClass(),
+            'item_id' => $product->id,
+            'type' => MovementType::INCOME,
+            'quantity' => 100,
+        ]);
+        MovementKardex::factory()->create([
+            'item_type' => $product->getMorphClass(),
+            'item_id' => $product->id,
+            'type' => MovementType::OUTCOME,
+            'quantity' => 30,
+        ]);
+        MovementKardex::factory()->create([
+            'item_type' => $product->getMorphClass(),
+            'item_id' => $product->id,
+            'type' => MovementType::LOSS,
+            'quantity' => 10,
+        ]);
+
+        $loadedProduct = Product::withStock()->find($product->id);
+        $this->assertEquals(60, $loadedProduct->stock);
+
+        // Check Supply works as well
+        $supply = Supply::factory()->create();
+        MovementKardex::factory()->create([
+            'item_type' => $supply->getMorphClass(),
+            'item_id' => $supply->id,
+            'type' => MovementType::INCOME,
+            'quantity' => 50,
+        ]);
+        $loadedSupply = Supply::withStock()->find($supply->id);
+        $this->assertEquals(50, $loadedSupply->stock);
+    }
+
+    public function test_bidirectional_kardex_relations_work(): void
+    {
+        $product = Product::factory()->create();
+        $movement = ProductMovement::factory()->create([
+            'product_id' => $product->id,
+        ]);
+
+        $kardex = MovementKardex::factory()->create([
+            'item_type' => $product->getMorphClass(),
+            'item_id' => $product->id,
+            'event_type' => $movement->getMorphClass(),
+            'event_id' => $movement->id,
+            'type' => MovementType::INCOME,
+            'quantity' => 100,
+        ]);
+
+        // Item side
+        $this->assertTrue($product->movements->contains($kardex));
+
+        // Event side
+        $this->assertEquals($kardex->id, $movement->kardex->id);
     }
 }

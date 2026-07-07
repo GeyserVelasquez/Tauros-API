@@ -40,6 +40,8 @@ class AppServiceProvider extends ServiceProvider
             'supply' => 'App\Models\Supply',
             'product' => 'App\Models\Product',
             'clinic_history' => 'App\Models\ClinicHistory',
+            'product_movement' => 'App\Models\ProductMovement',
+            'supply_movement' => 'App\Models\SupplyMovement',
         ]);
 
         Relation::requireMorphMap();
