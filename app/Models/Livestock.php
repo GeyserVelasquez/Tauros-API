@@ -213,7 +213,9 @@ class Livestock extends Model
 
     public function certificates(): BelongsToMany
     {
-        return $this->belongsToMany(Certificate::class, 'livestock_certificates');
+        return $this->belongsToMany(Certificate::class, 'livestock_certificates')
+            ->withPivot('batch_id')
+            ->withTimestamps();
     }
 
     public function products(): MorphMany
