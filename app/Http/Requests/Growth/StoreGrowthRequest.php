@@ -15,7 +15,9 @@ class StoreGrowthRequest extends FormRequest
     {
         return [
             'weight' => ['required', 'numeric', 'min:0'],
-            'height' => ['required', 'numeric', 'min:0'],
+            'height' => ['nullable', 'numeric', 'min:0'],
+            'length' => ['nullable', 'numeric', 'min:0'],
+            'thoracic_width' => ['nullable', 'numeric', 'min:0'],
             'made_at' => ['required', 'date', 'before_or_equal:today'],
             'livestock_id' => ['required', 'exists:livestock,id'],
             'growth_type_id' => ['required', 'exists:growth_types,id'],

@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->date('made_at');
             $table->decimal('weight');
-            $table->decimal('height');
-            $table->morphs('growthable');
+            $table->decimal('height')->nullable();
+            $table->decimal('length')->nullable();
+            $table->decimal('thoracic_width')->nullable();
+            $table->nullableMorphs('growthable');
             $table->foreignId('growth_type_id')->constrained();
             $table->foreignId('livestock_id')->constrained('livestock');
             $table->foreignId('technician_id')->nullable()->constrained()->nullOnDelete();
