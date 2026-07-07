@@ -10,7 +10,6 @@ use App\Models\SemenBatch;
 use App\Models\Livestock;
 use App\Models\ClinicHistory;
 use App\Models\SupplyMovement;
-use App\Models\Outcome;
 use App\Models\ProductMovement;
 use App\Models\Extraction;
 use App\Models\Service;
@@ -34,7 +33,6 @@ class MovementKardexValidator extends Validator
     protected array $eventMap = [
         ClinicHistory::class,
         SupplyMovement::class,
-        Outcome::class,
         ProductMovement::class,
         Extraction::class,
         Service::class,

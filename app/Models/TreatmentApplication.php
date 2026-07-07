@@ -87,12 +87,12 @@ class TreatmentApplication extends Model
 
             MovementKardex::create([
                 'item_id' => $this->supply_id,
-                'item_type' => Supply::class,
+                'item_type' => (new Supply)->getMorphClass(),
                 'type' => \App\Enums\MovementType::OUTCOME,
                 'quantity' => $quantityUsed,
                 'date' => now(),
                 'event_id' => $this->id,
-                'event_type' => self::class,
+                'event_type' => $this->getMorphClass(),
             ]);
         }
     }
