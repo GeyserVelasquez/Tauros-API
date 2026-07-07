@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Attributes\Filterable;
 use App\Attributes\Includable;
 use App\Attributes\Sortable;
+use App\Traits\HasInventoryStock;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,12 +14,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['code', 'name', 'description', 'attributes', 'product_type_id'])]
-#[Includable(['productType', 'productMovements'])]
+#[Includable(['productType', 'productMovements', 'movements'])]
 #[Filterable(['code', 'name', 'product_type_id'])]
 #[Sortable(['id', 'code', 'name', 'created_at'])]
 class Product extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasInventoryStock;
 
     protected function casts(): array
     {
