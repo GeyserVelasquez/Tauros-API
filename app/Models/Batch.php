@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['code', 'name', 'paddock_id'])]
-#[Includable(['paddock', 'livestock', 'batchMovements', 'batchPaddockMovements'])]
+#[Includable(['paddock', 'livestock', 'batchMovements', 'batchPaddockMovements', 'certificates'])]
 #[Filterable(['code', 'name', 'paddock_id'])]
 #[Sortable(['id', 'code', 'name', 'created_at'])]
 class Batch extends Model
@@ -38,5 +38,11 @@ class Batch extends Model
     public function batchMovements(): HasMany
     {
         return $this->hasMany(BatchMovement::class);
+    }
+
+    public function certificates(): BelongsToMany
+    {
+        return $this->belongsToMany(Certificate::class, 'batch_certificates')
+            ->withTimestamps();
     }
 }

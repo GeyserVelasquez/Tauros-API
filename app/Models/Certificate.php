@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['certificate_number', 'issue_date', 'expiry_date', 'file_path'])]
-#[Includable(['livestock'])]
+#[Includable(['livestock', 'batches'])]
 #[Filterable(['certificate_number', 'issue_date', 'expiry_date'])]
 #[Sortable(['id', 'certificate_number', 'issue_date', 'expiry_date', 'created_at'])]
 class Certificate extends Model
@@ -29,6 +29,15 @@ class Certificate extends Model
 
     public function livestock(): BelongsToMany
     {
-        return $this->belongsToMany(Livestock::class, 'livestock_certificates');
+        return $this->belongsToMany(Livestock::class, 'livestock_certificates')
+            ->withPivot('batch_id')
+            ->withTimestamps();
+    }
+
+    public function batches(): BelongsToMany
+    {
+        return $this->belongsToMany(Batch::class, 'batch_certificates')
+            ->withTimestamps();
     }
 }
+
