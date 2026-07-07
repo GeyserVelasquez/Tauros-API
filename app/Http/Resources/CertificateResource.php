@@ -18,8 +18,10 @@ class CertificateResource extends JsonResource
             'id' => $this->id,
             'certificate_number' => $this->certificate_number,
             'issue_date' => $this->issue_date->format('Y-m-d'),
-            'expiry_date' => $this->expiry_date->format('Y-m-d'),
+            'expiry_date' => $this->expiry_date ? $this->expiry_date->format('Y-m-d') : null,
             'file_path' => $this->file_path,
+            'batches' => BatchResource::collection($this->whenLoaded('batches')),
+            'livestock' => LivestockResource::collection($this->whenLoaded('livestock')),
         ];
     }
 }
