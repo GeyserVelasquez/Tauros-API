@@ -6,18 +6,28 @@ use App\Http\Requests\Outcome\StoreOutcomeRequest;
 use App\Http\Requests\Outcome\UpdateOutcomeRequest;
 use App\Http\Resources\OutcomeResource;
 use App\Models\Outcome;
+use App\Services\QueryBuilderService;
+use App\Services\OutcomeRegistrationService;
 use Illuminate\Http\Request;
 
 class OutcomeController extends Controller
 {
+    public function __construct(
+        protected QueryBuilderService $queryBuilderService,
+        protected OutcomeRegistrationService $outcomeRegistrationService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $outcomes = Outcome::all()->toResourceCollection();
+        $query = $this->queryBuilderService->build(Outcome::class, $request);
 
-        return $outcomes;
+        $outcomes = $query->paginate($request->get('per_page', 15))
+            ->withQueryString();
+
+        return OutcomeResource::collection($outcomes);
     }
 
     /**
@@ -27,7 +37,7 @@ class OutcomeController extends Controller
     {
         $data = $request->validated();
 
-        $outcome = Outcome::create($data);
+        $outcome = $this->outcomeRegistrationService->register($data);
 
         return new OutcomeResource($outcome);
     }
@@ -47,7 +57,7 @@ class OutcomeController extends Controller
     {
         $data = $request->validated();
 
-        $outcome->update($data);
+        $outcome = $this->outcomeRegistrationService->update($outcome, $data);
 
         return new OutcomeResource($outcome);
     }
@@ -57,7 +67,7 @@ class OutcomeController extends Controller
      */
     public function destroy(Outcome $outcome)
     {
-        $outcome->delete();
+        $this->outcomeRegistrationService->delete($outcome);
 
         return response(null, 204);
     }

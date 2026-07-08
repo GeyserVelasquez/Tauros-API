@@ -22,6 +22,8 @@ class GrowthResource extends JsonResource
             'id' => $this->id,
             'weight' => $this->weight,
             'height' => $this->height,
+            'length' => $this->length,
+            'thoracic_width' => $this->thoracic_width,
             'made_at' => $this->made_at?->format('Y-m-d'),
             'livestock_id' => $this->livestock_id,
             'growth_type_id' => $this->growth_type_id,

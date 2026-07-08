@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Requests\OutcomeType;
+namespace App\Http\Requests\Paddock;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateOutcomeTypeRequest extends FormRequest
+class StorePaddockRequest extends FormRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -16,20 +15,23 @@ class UpdateOutcomeTypeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $outcomeType = $this->route('outcomeType');
-
         return [
-            'code' => [
-                'required_without:name',
+            'name' => [
+                'required',
                 'string',
                 'max:255',
-                Rule::unique('outcome_types', 'code')->ignore($outcomeType)
             ],
-            'name' => [
-                'required_without:code',
+            'code' => [
+                'nullable',
                 'string',
-                'max:255'
+                'max:255',
+                Rule::unique('paddocks', 'code')
             ],
+            'area' => [
+                'nullable',
+                'numeric',
+                'min:0'
+            ]
         ];
     }
 }

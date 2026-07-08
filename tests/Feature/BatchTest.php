@@ -34,7 +34,7 @@ class BatchTest extends TestCase
                     'id',
                     'code',
                     'name',
-                    'herd_id'
+                    'paddock_id'
                 ]
             ]
         ]);
@@ -54,7 +54,7 @@ class BatchTest extends TestCase
         $response->assertJsonFragment([
             'code' => $batch->code,
             'name' => $batch->name,
-            'herd_id' => $batch->herd_id
+            'paddock_id' => $batch->paddock_id
         ]);
 
         $response->assertJsonStructure([
@@ -62,7 +62,7 @@ class BatchTest extends TestCase
                 'id',
                 'code',
                 'name',
-                'herd_id'
+                'paddock_id'
             ]
         ]);
     }
@@ -97,14 +97,14 @@ class BatchTest extends TestCase
 
     public function test_users_can_update_a_batch(): void
     {
-        $herd = Batch::factory()->create();
+        $batch = Batch::factory()->create();
 
         $payload = [
             'code' => '0295',
             'name' => 'Macanao'
         ];
 
-        $route = route('batches.update', $herd);
+        $route = route('batches.update', $batch);
 
         $response = $this->actingAs($this->user)
             ->putJson($route, $payload);
@@ -130,7 +130,7 @@ class BatchTest extends TestCase
         $this->assertSoftDeleted($batch);
     }
 
-    public function test_users_cannot_get_a_soft_deleted_herd(): void
+    public function test_users_cannot_get_a_soft_deleted_batch(): void
     {
         $batch = Batch::factory()->create();
 

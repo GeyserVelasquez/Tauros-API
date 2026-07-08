@@ -64,7 +64,7 @@ class BirthRegistrationService
             'birth_date' => $data['birth_date'],
             'entry_date' => $data['birth_date'],
             'entry_cause_id' => $calfData['entry_cause_id'],
-            'state_id' => $calfData['state_id'],
+            'state' => $calfData['state'],
             'is_alive' => true,
             'is_enabled' => true,
 

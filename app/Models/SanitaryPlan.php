@@ -11,16 +11,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['code', 'name'])]
-#[Includable(['livestock'])]
-#[Filterable(['code', 'name'])]
-#[Sortable(['id', 'code', 'name', 'created_at'])]
-class State extends Model
+#[Fillable(['name', 'description'])]
+#[Includable(['treatmentApplications'])]
+#[Filterable(['name'])]
+#[Sortable(['id', 'name', 'created_at'])]
+class SanitaryPlan extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
-    public function livestock(): HasMany
+    public function treatmentApplications(): HasMany
     {
-        return $this->hasMany(Livestock::class);
+        return $this->hasMany(TreatmentApplication::class);
     }
 }

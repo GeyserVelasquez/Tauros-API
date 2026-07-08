@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OutcomeTypeResource extends JsonResource
+class PaddockResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,11 @@ class OutcomeTypeResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'code' => $this->code,
             'name' => $this->name,
+            'code' => $this->code,
+            'area' => $this->area,
+            'batches' => BatchResource::collection($this->whenLoaded('batches')),
+            'livestock' => LivestockResource::collection($this->whenLoaded('livestock')),
         ];
     }
 }

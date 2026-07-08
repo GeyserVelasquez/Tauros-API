@@ -16,7 +16,8 @@ class UpdateOutcomeRequest extends FormRequest
         return [
             'livestock_id' => ['sometimes', 'required', 'exists:livestock,id'],
             'made_at' => ['sometimes', 'required', 'date'],
-            'outcome_type_id' => ['sometimes', 'required', 'exists:outcome_types,id'],
+            'outcome_type' => ['sometimes', 'required', 'in:death,sale,transfer,slaughter'],
+            'death_cause_id' => ['required_if:outcome_type,death', 'nullable', 'exists:death_causes,id'],
         ];
     }
 }

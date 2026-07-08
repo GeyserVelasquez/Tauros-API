@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['made_at', 'outcome_type_id', 'livestock_id'])]
-#[Includable(['outcomeType', 'livestock'])]
-#[Filterable(['outcome_type_id', 'livestock_id', 'made_at'])]
+#[Fillable(['made_at', 'outcome_type', 'livestock_id', 'death_cause_id'])]
+#[Includable(['deathCause', 'livestock'])]
+#[Filterable(['outcome_type', 'livestock_id', 'made_at', 'death_cause_id'])]
 #[Sortable(['id', 'made_at', 'created_at'])]
 class Outcome extends Model
 {
@@ -26,9 +26,9 @@ class Outcome extends Model
         ];
     }
 
-    public function outcomeType(): BelongsTo
+    public function deathCause(): BelongsTo
     {
-        return $this->belongsTo(OutcomeType::class);
+        return $this->belongsTo(DeathCause::class);
     }
 
     public function livestock(): BelongsTo

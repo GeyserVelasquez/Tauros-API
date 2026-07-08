@@ -16,7 +16,8 @@ class StoreOutcomeRequest extends FormRequest
         return [
             'livestock_id' => ['required', 'exists:livestock,id'],
             'made_at' => ['required', 'date'],
-            'outcome_type_id' => ['required', 'exists:outcome_types,id'],
+            'outcome_type' => ['required', 'in:death,sale,transfer,slaughter'],
+            'death_cause_id' => ['required_if:outcome_type,death', 'nullable', 'exists:death_causes,id'],
         ];
     }
 }

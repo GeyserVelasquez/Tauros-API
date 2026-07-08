@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Batch;
-use App\Models\Herd;
+use App\Models\Paddock;
 use App\Models\Product;
 use App\Models\ProductType;
 use App\Models\Supply;
@@ -17,11 +17,11 @@ class InventorySeeder extends Seeder
      */
     public function run(): void
     {
-        $herd = Herd::first();
+        $paddock = Paddock::first();
 
         $batches = [
-            ['code' => 'BATCH-001', 'name' => 'Lote de Engorde 1', 'herd_id' => $herd->id],
-            ['code' => 'BATCH-002', 'name' => 'Lote de Cría A', 'herd_id' => $herd->id],
+            ['code' => 'BATCH-001', 'name' => 'Lote de Engorde 1', 'paddock_id' => $paddock?->id],
+            ['code' => 'BATCH-002', 'name' => 'Lote de Cría A', 'paddock_id' => $paddock?->id],
         ];
 
         foreach ($batches as $batch) {

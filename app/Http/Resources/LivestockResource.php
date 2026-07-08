@@ -27,7 +27,8 @@ class LivestockResource extends JsonResource
             'is_alive' => (bool)$this->is_alive,
             'animal_category' => $this->animal_category?->value,
             'entry_cause_id' => $this->entry_cause_id,
-            'state_id' => $this->state_id,
+            'reproductive_status' => $this->reproductive_status,
+            'state' => $this->state?->value,
             'breed_id' => $this->breed_id,
             'color_id' => $this->color_id,
             'classification_id' => $this->classification_id,
@@ -37,6 +38,8 @@ class LivestockResource extends JsonResource
             'mother_id' => $this->mother_id,
             'adoptive_mother_id' => $this->adoptive_mother_id,
             'receiving_mother_id' => $this->receiving_mother_id,
+            'batch_id' => $this->batch_id,
+            'paddock_id' => $this->paddock_id,
 
             'breed' => new BreedResource($this->whenLoaded('breed')),
             'color' => new ColorResource($this->whenLoaded('color')),
@@ -50,9 +53,9 @@ class LivestockResource extends JsonResource
             'owner' => new OwnerResource($this->whenLoaded('owner')),
             'technician' => new TechnicianResource($this->whenLoaded('technician')),
             'entry_cause' => new EntryCauseResource($this->whenLoaded('entryCause')),
-            'state' => new StateResource($this->whenLoaded('state')),
 
-            'batch' => new BatchResource($this->whenLoaded('currentBatchMovement')),
+            'batch' => new BatchResource($this->whenLoaded('batch')),
+            'paddock' => new PaddockResource($this->whenLoaded('paddock')),
 
         ];
     }

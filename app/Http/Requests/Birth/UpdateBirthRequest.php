@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Birth;
 
+use App\Enums\State;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Enums\AnimalCategory;
 use Illuminate\Validation\Rule;
@@ -28,7 +29,7 @@ class UpdateBirthRequest extends FormRequest
             'newborns.*.animal_category' => ['required_with:newborns', Rule::enum(AnimalCategory::class)],
 
             'newborns.*.entry_cause_id' => ['required_with:newborns', 'exists:entry_causes,id'],
-            'newborns.*.state_id' => ['required_with:newborns', 'exists:states,id'],
+            'newborns.*.state' => ['required_with:newborns', Rule::enum(State::class)],
             'newborns.*.newborn_type_id' => ['required_with:newborns', 'exists:newborn_types,id'],
 
             'newborns.*.color_id' => ['nullable', 'exists:colors,id'],

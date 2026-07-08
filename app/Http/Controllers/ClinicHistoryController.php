@@ -35,9 +35,51 @@ class ClinicHistoryController extends Controller
     {
         $data = $request->validated();
 
-        $clinicHistory = ClinicHistory::create($data);
+        $clinicHistory = \DB::transaction(function () use ($data) {
+            $clinicHistory = ClinicHistory::create($data);
 
-        return new ClinicHistoryResource($clinicHistory);
+            if (isset($data['diagnostics'])) {
+                $clinicHistory->clinicDiagnostics()->sync($data['diagnostics']);
+            }
+
+            if (isset($data['treatments'])) {
+                foreach ($data['treatments'] as $treatment) {
+                    $clinicHistory->clinicalTreatments()->attach($treatment['clinical_treatment_id']);
+
+                    $isRecurring = $treatment['is_recurring'] ?? false;
+                    $totalDoses = $isRecurring ? ($treatment['total_doses'] ?? 1) : 1;
+                    $frequencyHours = $isRecurring ? ($treatment['frequency_hours'] ?? 24) : 24;
+
+                    $startDate = isset($treatment['first_dose_date']) ? \Illuminate\Support\Carbon::parse($treatment['first_dose_date']) : now();
+                    $isFirstDoseApplied = $treatment['is_first_dose_applied'] ?? true;
+
+                    for ($i = 1; $i <= $totalDoses; $i++) {
+                        $scheduledDate = $startDate->copy()->addHours(($i - 1) * $frequencyHours);
+                        
+                        $app = \App\Models\TreatmentApplication::create([
+                            'livestock_id' => $clinicHistory->livestock_id,
+                            'clinical_treatment_id' => $treatment['clinical_treatment_id'],
+                            'supply_id' => $treatment['supply_id'] ?? null,
+                            'dose_number' => $isRecurring ? $i : null,
+                            'quantity' => (int) round($treatment['quantity'] * 100),
+                            'scheduled_date' => $scheduledDate,
+                            'clinic_history_id' => $clinicHistory->id,
+                        ]);
+
+                        if ($i === 1 && $isFirstDoseApplied) {
+                            $app->apply(
+                                $clinicHistory->technician_id ?? auth()->id() ?? 1,
+                                (int) round($treatment['quantity'] * 100)
+                            );
+                        }
+                    }
+                }
+            }
+
+            return $clinicHistory;
+        });
+
+        return new ClinicHistoryResource($clinicHistory->load(['livestock', 'technician', 'clinicDiagnostics', 'clinicalTreatments', 'treatmentApplications']));
     }
 
     /**
@@ -58,9 +100,64 @@ class ClinicHistoryController extends Controller
     {
         $data = $request->validated();
 
-        $clinicHistory->update($data);
+        \DB::transaction(function () use ($clinicHistory, $data) {
+            $clinicHistory->update($data);
 
-        return new ClinicHistoryResource($clinicHistory);
+            if (isset($data['diagnostics'])) {
+                $clinicHistory->clinicDiagnostics()->sync($data['diagnostics']);
+            }
+
+            if (isset($data['treatments'])) {
+                // Delete scheduled applications that are NOT applied yet
+                $clinicHistory->treatmentApplications()->whereNull('applied_at')->delete();
+                $clinicHistory->clinicalTreatments()->detach();
+
+                foreach ($data['treatments'] as $treatment) {
+                    $clinicHistory->clinicalTreatments()->attach($treatment['clinical_treatment_id']);
+
+                    $isRecurring = $treatment['is_recurring'] ?? false;
+                    $totalDoses = $isRecurring ? ($treatment['total_doses'] ?? 1) : 1;
+                    $frequencyHours = $isRecurring ? ($treatment['frequency_hours'] ?? 24) : 24;
+
+                    $startDate = isset($treatment['first_dose_date']) ? \Illuminate\Support\Carbon::parse($treatment['first_dose_date']) : now();
+                    $isFirstDoseApplied = $treatment['is_first_dose_applied'] ?? true;
+
+                    for ($i = 1; $i <= $totalDoses; $i++) {
+                        // Check if we already have an applied dose for this treatment
+                        $alreadyApplied = $clinicHistory->treatmentApplications()
+                            ->where('clinical_treatment_id', $treatment['clinical_treatment_id'])
+                            ->where('dose_number', $isRecurring ? $i : null)
+                            ->whereNotNull('applied_at')
+                            ->exists();
+
+                        if ($alreadyApplied) {
+                            continue;
+                        }
+
+                        $scheduledDate = $startDate->copy()->addHours(($i - 1) * $frequencyHours);
+
+                        $app = \App\Models\TreatmentApplication::create([
+                            'livestock_id' => $clinicHistory->livestock_id,
+                            'clinical_treatment_id' => $treatment['clinical_treatment_id'],
+                            'supply_id' => $treatment['supply_id'] ?? null,
+                            'dose_number' => $isRecurring ? $i : null,
+                            'quantity' => (int) round($treatment['quantity'] * 100),
+                            'scheduled_date' => $scheduledDate,
+                            'clinic_history_id' => $clinicHistory->id,
+                        ]);
+
+                        if ($i === 1 && $isFirstDoseApplied) {
+                            $app->apply(
+                                $clinicHistory->technician_id ?? auth()->id() ?? 1,
+                                (int) round($treatment['quantity'] * 100)
+                            );
+                        }
+                    }
+                }
+            }
+        });
+
+        return new ClinicHistoryResource($clinicHistory->load(['livestock', 'technician', 'clinicDiagnostics', 'clinicalTreatments', 'treatmentApplications']));
     }
 
     /**

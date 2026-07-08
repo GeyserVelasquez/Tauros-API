@@ -15,7 +15,9 @@ class UpdateGrowthRequest extends FormRequest
     {
         return [
             'weight' => ['sometimes', 'required', 'numeric', 'min:0'],
-            'height' => ['sometimes', 'required', 'numeric', 'min:0'],
+            'height' => ['sometimes', 'nullable', 'numeric', 'min:0'],
+            'length' => ['sometimes', 'nullable', 'numeric', 'min:0'],
+            'thoracic_width' => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'made_at' => ['sometimes', 'required', 'date', 'before_or_equal:today'],
             'livestock_id' => ['sometimes', 'required', 'exists:livestock,id'],
             'growth_type_id' => ['sometimes', 'required', 'exists:growth_types,id'],

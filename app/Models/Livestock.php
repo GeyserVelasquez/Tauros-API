@@ -6,6 +6,7 @@ use App\Attributes\Filterable;
 use App\Attributes\Includable;
 use App\Attributes\Sortable;
 use App\Enums\AnimalCategory;
+use App\Enums\State;
 use App\Observers\LivestockObserver;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -22,19 +23,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[Fillable([
     'brand_number', 'electronic_code', 'name', 'entry_date', 'birth_date',
     'general_comment', 'tits', 'is_enabled', 'is_alive', 'entry_cause_id',
-    'state_id', 'animal_category', 'breed_id', 'color_id', 'classification_id',
+    'state', 'animal_category', 'breed_id', 'color_id', 'classification_id',
     'owner_id', 'technician_id', 'father_id', 'mother_id',
-    'adoptive_mother_id', 'receiving_mother_id',
+    'adoptive_mother_id', 'receiving_mother_id', 'batch_id', 'paddock_id',
 ])]
 
 #[Includable([
-    'entryCause', 'state', 'breed', 'color', 'classification', 'owner',
-    'technician', 'batch', 'father', 'mother', 'adoptiveMother',
-    'receivingMother', 'currentBatchMovement',
+    'entryCause', 'breed', 'color', 'classification', 'owner',
+    'technician', 'batch', 'paddock', 'father', 'mother', 'adoptiveMother',
+    'receivingMother', 'currentBatchMovement', 'paddockMovements',
 ])]
 
-#[Filterable(['name', 'brand_number', 'electronic_code', 'state_id', 'breed_id', 'color_id', 'entry_cause_id', 'animal_category'])]
-#[Sortable(['id','brand_number', 'name', 'entry_date', 'birth_date', 'created_at'])]
+#[Filterable(['name', 'brand_number', 'electronic_code', 'state', 'breed_id', 'color_id', 'entry_cause_id', 'animal_category', 'batch_id', 'paddock_id'])]
+#[Sortable(['id', 'brand_number', 'name', 'entry_date', 'birth_date', 'created_at'])]
 
 #[ObservedBy([LivestockObserver::class])]
 class Livestock extends Model
@@ -51,17 +52,23 @@ class Livestock extends Model
             'is_enabled' => 'boolean',
             'is_alive' => 'boolean',
             'animal_category' => AnimalCategory::class,
+            'state' => State::class,
         ];
+    }
+
+    public function scopeAlive($query)
+    {
+        return $query->where('is_alive', true);
+    }
+
+    public function scope($query)
+    {
+        return $query->where('is_alive', true);
     }
 
     public function entryCause(): BelongsTo
     {
         return $this->belongsTo(EntryCause::class);
-    }
-
-    public function state(): BelongsTo
-    {
-        return $this->belongsTo(State::class);
     }
 
     public function breed(): BelongsTo
@@ -206,7 +213,9 @@ class Livestock extends Model
 
     public function certificates(): BelongsToMany
     {
-        return $this->belongsToMany(Certificate::class, 'livestock_certificates');
+        return $this->belongsToMany(Certificate::class, 'livestock_certificates')
+            ->withPivot('batch_id')
+            ->withTimestamps();
     }
 
     public function products(): MorphMany
@@ -230,8 +239,58 @@ class Livestock extends Model
             ->withTimestamps();
     }
 
+    public function paddock(): BelongsTo
+    {
+        return $this->belongsTo(Paddock::class);
+    }
+
+    public function paddockMovements(): HasMany
+    {
+        return $this->hasMany(PaddockMovement::class);
+    }
+
+    public function paddocks(): BelongsToMany
+    {
+        return $this->belongsToMany(Paddock::class, 'paddock_movements')
+            ->withTimestamps();
+    }
+
     public function scopeBornAfter(Builder $query, string $date): Builder
     {
         return $query->where('birth_date', '>=', $date);
+    }
+
+    public function latestEvent(): HasOne
+    {
+        return $this->hasOne(Event::class, 'livestock')->latestOfMany('made_at');
+    }
+
+    public function getReproductiveStatusAttribute(): string
+    {
+        $lastEvent = $this->latestEvent;
+
+        if (! $lastEvent) {
+            return 'empty';
+        }
+
+        $eventable = $lastEvent->eventable;
+
+        if (! $eventable) {
+            return 'empty';
+        }
+
+        if ($eventable instanceof Revision) {
+            return $eventable->revision_result->value;
+        }
+
+        if ($eventable instanceof Abort || $eventable instanceof Birth) {
+            return 'empty';
+        }
+
+        if ($eventable instanceof Service) {
+            return 'waiting';
+        }
+
+        return 'empty';
     }
 }
