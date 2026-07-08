@@ -11,13 +11,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['code', 'name'])]
+#[Fillable(['name'])]
 #[Includable(['outcomes'])]
-#[Filterable(['code', 'name'])]
-#[Sortable(['id', 'code', 'name', 'created_at'])]
-class OutcomeType extends Model
+#[Filterable(['name'])]
+#[Sortable(['id', 'name', 'created_at'])]
+class DeathCause extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     public function outcomes(): HasMany
     {
