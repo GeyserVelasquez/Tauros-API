@@ -31,7 +31,7 @@ use App\Http\Controllers\MovementKardexController;
 use App\Http\Controllers\NewbornController;
 use App\Http\Controllers\NewbornTypeController;
 use App\Http\Controllers\OutcomeController;
-use App\Http\Controllers\OutcomeTypeController;
+use App\Http\Controllers\DeathCauseController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductMovementController;
@@ -92,7 +92,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('newborns', NewbornController::class);
     Route::apiResource('newborn-types', NewbornTypeController::class);
     Route::apiResource('outcomes', OutcomeController::class);
-    Route::apiResource('outcome-types', OutcomeTypeController::class);
+    Route::apiResource('death-causes', DeathCauseController::class);
     Route::apiResource('owners', OwnerController::class);
     Route::apiResource('products', ProductController::class);
     Route::apiResource('product-movements', ProductMovementController::class);

@@ -18,9 +18,10 @@ class OutcomeResource extends JsonResource
             'id' => $this->id,
             'livestock_id' => $this->livestock_id,
             'made_at' => $this->made_at->format('Y-m-d'),
-            'outcome_type_id' => $this->outcome_type_id,
+            'outcome_type' => $this->outcome_type,
+            'death_cause_id' => $this->death_cause_id,
             'livestock' => new LivestockResource($this->whenLoaded('livestock')),
-            'outcome_type' => new OutcomeTypeResource($this->whenLoaded('outcomeType')),
+            'death_cause' => new DeathCauseResource($this->whenLoaded('deathCause')),
         ];
     }
 }
