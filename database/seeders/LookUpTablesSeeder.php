@@ -11,14 +11,13 @@ use App\Models\EmbrionExtractionType;
 use App\Models\EntryCause;
 use App\Models\ExtractionType;
 use App\Models\GrowthType;
-use App\Models\Herd;
+use App\Models\Paddock;
 use App\Models\MilkingType;
 use App\Models\NewbornType;
-use App\Models\OutcomeType;
+use App\Models\DeathCause;
 use App\Models\ProductType;
 use App\Models\RevisionType;
 use App\Models\ServiceType;
-use App\Models\State;
 use App\Models\SupplyType;
 use App\Models\Technician;
 use Illuminate\Database\Seeder;
@@ -37,12 +36,7 @@ class LookUpTablesSeeder extends Seeder
                 ['code' => 'GIFT', 'name' => 'Regalo'],
                 ['code' => 'TRANSFER', 'name' => 'Traspaso'],
             ],
-            State::class => [
-                ['code' => 'HEALTHY', 'name' => 'Sano'],
-                ['code' => 'SICK', 'name' => 'Enfermo'],
-                ['code' => 'TREATMENT', 'name' => 'En Tratamiento'],
-                ['code' => 'QUARANTINE', 'name' => 'En Cuarentena'],
-            ],
+
             Classification::class => [
                 ['code' => 'GOOD', 'name' => 'Bueno'],
                 ['code' => 'REGULAR', 'name' => 'Regular'],
@@ -62,13 +56,7 @@ class LookUpTablesSeeder extends Seeder
                 ['code' => 'BRAHMAN', 'name' => 'Brahman'],
                 ['code' => 'ZEBU', 'name' => 'Cebú'],
             ],
-            OutcomeType::class => [
-                ['code' => 'SALE', 'name' => 'Venta'],
-                ['code' => 'DEATH', 'name' => 'Muerte'],
-                ['code' => 'SLAUGHTER', 'name' => 'Sacrificio'],
-                ['code' => 'TRANSFER', 'name' => 'Traspaso'],
-                ['code' => 'THEFT', 'name' => 'Robo'],
-            ],
+
             ProductType::class => [
                 ['code' => 'MILK', 'name' => 'Leche'],
                 ['code' => 'MEAT', 'name' => 'Carne'],
@@ -122,10 +110,10 @@ class LookUpTablesSeeder extends Seeder
                 ['code' => 'SURGICAL', 'name' => 'Quirúrgica'],
                 ['code' => 'NON-SURGICAL', 'name' => 'No Quirúrgica'],
             ],
-            Herd::class => [
-                ['code' => 'MAIN', 'name' => 'Hato Principal'],
-                ['code' => 'NORTH', 'name' => 'Hato Norte'],
-                ['code' => 'SOUTH', 'name' => 'Hato Sur'],
+            Paddock::class => [
+                ['code' => 'MAIN', 'name' => 'Potrero Principal'],
+                ['code' => 'NORTH', 'name' => 'Potrero Norte'],
+                ['code' => 'SOUTH', 'name' => 'Potrero Sur'],
             ],
             Technician::class => [
                 ['code' => 'V-14789456', 'name' => 'Técnico Principal', 'telephone' => '+584123456789'],
@@ -137,6 +125,19 @@ class LookUpTablesSeeder extends Seeder
             foreach ($rows as $row) {
                 $model::updateOrCreate(['code' => $row['code']], $row);
             }
+        }
+
+        // Seed Death Causes
+        $deathCauses = [
+            ['name' => 'Enfermedad / Epidemia'],
+            ['name' => 'Accidente / Traumatismo'],
+            ['name' => 'Vejez / Senilidad'],
+            ['name' => 'Parto Distócico'],
+            ['name' => 'Causa Desconocida'],
+        ];
+
+        foreach ($deathCauses as $cause) {
+            DeathCause::firstOrCreate(['name' => $cause['name']], $cause);
         }
     }
 }

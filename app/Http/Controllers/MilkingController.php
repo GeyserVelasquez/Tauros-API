@@ -6,18 +6,26 @@ use App\Http\Requests\Milking\StoreMilkingRequest;
 use App\Http\Requests\Milking\UpdateMilkingRequest;
 use App\Http\Resources\MilkingResource;
 use App\Models\Milking;
+use App\Services\QueryBuilderService;
 use Illuminate\Http\Request;
 
 class MilkingController extends Controller
 {
+    public function __construct(
+        protected QueryBuilderService $queryBuilderService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $milkings = Milking::all()->toResourceCollection();
+        $query = $this->queryBuilderService->build(Milking::class, $request);
 
-        return $milkings;
+        $milkings = $query->paginate($request->get('per_page', 15))
+            ->withQueryString();
+
+        return MilkingResource::collection($milkings);
     }
 
     /**
@@ -35,9 +43,12 @@ class MilkingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Milking $milking)
+    public function show(Request $request, Milking $milking)
     {
-        return new MilkingResource($milking);
+        $loadedMilking = $this->queryBuilderService->buildForModel($milking, $request)
+            ->firstOrFail();
+
+        return new MilkingResource($loadedMilking);
     }
 
     /**

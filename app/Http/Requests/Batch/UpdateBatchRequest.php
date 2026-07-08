@@ -23,16 +23,18 @@ class UpdateBatchRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('batches', 'code')->ignore($batch)            ],
+                Rule::unique('batches', 'code')->ignore($batch)
+            ],
             'name' => [
                 'sometimes',
                 'required',
                 'string',
                 'max:255'
             ],
-            'herd_id' => [
+            'paddock_id' => [
                 'sometimes',
-                'required', 'exists:herds,id'
+                'nullable',
+                'exists:paddocks,id'
             ]
         ];
     }

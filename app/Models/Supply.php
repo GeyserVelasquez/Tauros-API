@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Attributes\Filterable;
 use App\Attributes\Includable;
 use App\Attributes\Sortable;
+use App\Traits\HasInventoryStock;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,12 +14,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['code', 'name', 'attributes', 'supply_type_id'])]
-#[Includable(['supplyType', 'clinicalTreatmentSupplies'])]
+#[Includable(['supplyType', 'clinicalTreatmentSupplies', 'supplyMovements', 'movements'])]
 #[Filterable(['code', 'name', 'supply_type_id'])]
 #[Sortable(['id', 'code', 'name', 'created_at'])]
 class Supply extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasInventoryStock;
 
     protected function casts(): array
     {
@@ -35,5 +36,10 @@ class Supply extends Model
     public function clinicalTreatmentSupplies(): HasMany
     {
         return $this->hasMany(ClinicalTreatmentSupply::class);
+    }
+
+    public function supplyMovements(): HasMany
+    {
+        return $this->hasMany(SupplyMovement::class);
     }
 }

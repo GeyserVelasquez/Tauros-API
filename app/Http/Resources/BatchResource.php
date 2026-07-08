@@ -18,8 +18,9 @@ class BatchResource extends JsonResource
             'id' => $this->id,
             'code' => $this->code,
             'name' => $this->name,
-            'herd_id' => $this->herd_id,
-            'herd' => new HerdResource($this->whenLoaded('herd')),
+            'paddock_id' => $this->paddock_id,
+            'paddock' => new PaddockResource($this->whenLoaded('paddock')),
+            'livestock' => LivestockResource::collection($this->whenLoaded('livestock')),
         ];
     }
 }

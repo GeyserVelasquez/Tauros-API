@@ -37,7 +37,7 @@ class ServiceRegistrationService
                     'item_id' => $service->parentable_id,
                     'type' => MovementType::OUTCOME,
                     'quantity' => $data['quantity'] ?? 1, // Consume 1 dosis/embrión por defecto
-                    'event_type' => Service::class,
+                    'event_type' => $service->getMorphClass(),
                     'event_id' => $service->id,
                     'date' => $service->made_at,
                 ]);
@@ -63,7 +63,7 @@ class ServiceRegistrationService
             if ($service->parentable_type !== Livestock::class) {
                 $service->movements()->updateOrCreate(
                     [
-                        'event_type' => Service::class,
+                        'event_type' => $service->getMorphClass(),
                         'event_id' => $service->id,
                     ],
                     [

@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['code', 'name', 'attributes'])]
-#[Includable(['clinicHistories', 'clinicalTreatmentSupplies'])]
+#[Includable(['clinicHistories', 'treatmentApplications'])]
 #[Filterable(['code', 'name'])]
 #[Sortable(['id', 'code', 'name', 'created_at'])]
 class ClinicalTreatment extends Model
@@ -32,8 +32,8 @@ class ClinicalTreatment extends Model
         return $this->belongsToMany(ClinicHistory::class, 'clinic_history_treatments');
     }
 
-    public function clinicalTreatmentSupplies(): HasMany
+    public function treatmentApplications(): HasMany
     {
-        return $this->hasMany(ClinicalTreatmentSupply::class);
+        return $this->hasMany(TreatmentApplication::class);
     }
 }

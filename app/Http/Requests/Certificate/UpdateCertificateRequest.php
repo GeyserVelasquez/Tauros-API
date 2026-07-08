@@ -31,7 +31,7 @@ class UpdateCertificateRequest extends FormRequest
             ],
             'expiry_date' => [
                 'sometimes',
-                'required',
+                'nullable',
                 'date',
                 'after_or_equal:issue_date'
             ],
@@ -39,6 +39,32 @@ class UpdateCertificateRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:255'
+            ],
+            'assign_by' => [
+                'sometimes',
+                'required',
+                Rule::in(['batch', 'individual'])
+            ],
+            'batch_id' => [
+                'required_if:assign_by,batch',
+                'nullable',
+                'integer',
+                'exists:batches,id'
+            ],
+            'livestock_ids' => [
+                'required_if:assign_by,individual',
+                'nullable',
+                'array'
+            ],
+            'livestock_ids.*' => [
+                'integer',
+                'exists:livestock,id'
+            ],
+            'file' => [
+                'nullable',
+                'file',
+                'mimes:pdf',
+                'max:5120'
             ],
         ];
     }

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Attributes\Filterable;
 use App\Attributes\Includable;
 use App\Attributes\Sortable;
+use App\Traits\HasInventoryStock;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,12 +14,12 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['code', 'name', 'description', 'mother_id', 'father_id', 'technician_id'])]
-#[Includable(['mother', 'father', 'technician', 'products', 'services', 'extractions'])]
+#[Includable(['mother', 'father', 'technician', 'products', 'services', 'extractions', 'movements'])]
 #[Filterable(['code', 'name', 'mother_id', 'father_id', 'technician_id'])]
 #[Sortable(['id', 'code', 'name', 'created_at'])]
 class EmbrionBatch extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasInventoryStock;
 
     public function mother(): BelongsTo
     {
@@ -48,10 +49,5 @@ class EmbrionBatch extends Model
     public function extractions(): MorphMany
     {
         return $this->morphMany(Extraction::class, 'geneticable');
-    }
-
-    public function movements(): MorphMany
-    {
-        return $this->morphMany(MovementKardex::class, 'item');
     }
 }

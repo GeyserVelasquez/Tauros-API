@@ -27,8 +27,8 @@ class StoreBatchRequest extends FormRequest
                 'string',
                 'max:255'
             ],
-            'herd_id' => [
-                'required', 'exists:herds,id'
+            'paddock_id' => [
+                'nullable', 'exists:paddocks,id'
             ]
         ];
     }

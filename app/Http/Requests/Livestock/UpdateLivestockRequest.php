@@ -5,6 +5,7 @@ namespace App\Http\Requests\Livestock;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Enums\AnimalCategory;
+use App\Enums\State;
 
 class UpdateLivestockRequest extends FormRequest
 {
@@ -28,7 +29,7 @@ class UpdateLivestockRequest extends FormRequest
             'is_enabled' => ['sometimes','required','boolean'],
             'is_alive' => ['sometimes','required','boolean'],
             'entry_cause_id' => ['sometimes','required', 'exists:entry_causes,id'],
-            'state_id' => ['sometimes','required', 'exists:states,id'],
+            'state' => ['sometimes','required', Rule::enum(State::class)],
             'animal_category' => ['sometimes','required', Rule::enum(AnimalCategory::class)],
             'breed_id' => ['sometimes','nullable', 'exists:breeds,id'],
             'color_id' => ['sometimes','nullable', 'exists:colors,id'],

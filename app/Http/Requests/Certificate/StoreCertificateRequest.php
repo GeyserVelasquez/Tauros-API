@@ -26,7 +26,7 @@ class StoreCertificateRequest extends FormRequest
                 'date'
             ],
             'expiry_date' => [
-                'required',
+                'nullable',
                 'date',
                 'after_or_equal:issue_date'
             ],
@@ -35,6 +35,25 @@ class StoreCertificateRequest extends FormRequest
                 'string',
                 'max:255'
             ],
+            'file' => [
+                'nullable',
+                'file',
+                'max:5120',
+                'mimes:pdf,jpg,jpeg,png'
+            ],
+            'batch_id' => [
+                'nullable',
+                'integer',
+                'exists:batches,id'
+            ],
+            'livestock_ids' => [
+                'nullable',
+                'array'
+            ],
+            'livestock_ids.*' => [
+                'integer',
+                'exists:livestock,id'
+            ]
         ];
     }
 }

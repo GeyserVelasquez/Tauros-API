@@ -14,10 +14,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['weight', 'height', 'made_at', 'livestock_id', 'growth_type_id', 'technician_id', 'growthable_id', 'growthable_type'])]
+#[Fillable(['weight', 'height', 'length', 'thoracic_width', 'made_at', 'livestock_id', 'growth_type_id', 'technician_id', 'growthable_id', 'growthable_type'])]
 #[Includable(['livestock', 'growthType', 'technician', 'growthable'])]
 #[Filterable(['livestock_id', 'growth_type_id', 'technician_id', 'made_at'])]
-#[Sortable(['id', 'weight', 'height', 'made_at', 'created_at'])]
+#[Sortable(['id', 'weight', 'height', 'length', 'thoracic_width', 'made_at', 'created_at'])]
 #[ObservedBy(GrowthObserver::class)]
 class Growth extends Model
 {
@@ -29,6 +29,8 @@ class Growth extends Model
             'made_at' => 'date',
             'weight' => 'decimal:2',
             'height' => 'decimal:2',
+            'length' => 'decimal:2',
+            'thoracic_width' => 'decimal:2',
         ];
     }
 

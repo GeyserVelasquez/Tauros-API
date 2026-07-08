@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Batch;
-use App\Models\Herd;
+use App\Models\Paddock;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,7 +21,7 @@ class BatchFactory extends Factory
         return [
             'code' => $this->faker->unique()->bothify('BAT-??-####'),
             'name' => $this->faker->word(),
-            'herd_id' => Herd::factory(),
+            'paddock_id' => Paddock::factory(),
         ];
     }
 }
