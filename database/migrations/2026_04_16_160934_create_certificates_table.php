@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('certificate_number');
             $table->date('issue_date');
-            $table->date('expiry_date');
+            $table->date('expiry_date')->nullable();
             $table->string('file_path')->nullable();
             $table->softDeletes();
             $table->timestamps();
