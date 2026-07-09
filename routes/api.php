@@ -15,6 +15,7 @@ use App\Http\Controllers\ClinicHistoryController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardStatsController;
+use App\Http\Controllers\DeathCauseController;
 use App\Http\Controllers\EmbrionBatchController;
 use App\Http\Controllers\EmbrionExtractionTypeController;
 use App\Http\Controllers\EntryCauseController;
@@ -22,7 +23,6 @@ use App\Http\Controllers\ExtractionController;
 use App\Http\Controllers\ExtractionTypeController;
 use App\Http\Controllers\GrowthController;
 use App\Http\Controllers\GrowthTypeController;
-use App\Http\Controllers\PaddockController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LivestockController;
 use App\Http\Controllers\MilkingController;
@@ -31,8 +31,8 @@ use App\Http\Controllers\MovementKardexController;
 use App\Http\Controllers\NewbornController;
 use App\Http\Controllers\NewbornTypeController;
 use App\Http\Controllers\OutcomeController;
-use App\Http\Controllers\DeathCauseController;
 use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\PaddockController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductMovementController;
 use App\Http\Controllers\ProductTypeController;
@@ -55,7 +55,18 @@ require __DIR__.'/auth.php';
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/user', function (Request $request) {
-        return $request->user();
+        $user = $request->user();
+
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'email_verified_at' => $user->email_verified_at,
+            'created_at' => $user->created_at,
+            'updated_at' => $user->updated_at,
+            'roles' => $user->getRoleNames(),
+            'permissions' => $user->getAllPermissions()->pluck('name'),
+        ]);
     });
 
     Route::apiResource('aborts', AbortController::class);

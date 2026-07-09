@@ -3,15 +3,17 @@
 namespace Tests;
 
 use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Testing\TestResponse;
 
 abstract class TestCase extends BaseTestCase
 {
-    use refreshDatabase;
+    use RefreshDatabase;
 
     protected string $apiPrefix = '/api/v1';
+
     protected User $user;
 
     protected function setUp(): void
@@ -20,7 +22,9 @@ abstract class TestCase extends BaseTestCase
 
         $this->withHeader('Referer', 'http://localhost');
 
+        $this->seed(RolesAndPermissionsSeeder::class);
         $this->user = User::factory()->create();
+        $this->user->assignRole('Admin');
     }
 
     protected function buildApiUri(string $uri): string
@@ -29,7 +33,7 @@ abstract class TestCase extends BaseTestCase
             return $uri;
         }
 
-        return $this->apiPrefix . '/' . ltrim($uri, '/');
+        return $this->apiPrefix.'/'.ltrim($uri, '/');
     }
 
     /**
