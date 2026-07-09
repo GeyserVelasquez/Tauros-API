@@ -29,10 +29,6 @@ class DatabaseSeeder extends Seeder
             MovementKardexSeeder::class,
         ]);
 
-        $admin = User::factory()->create([
-            'name' => 'Administrator',
-            'email' => 'admin@llanos.com',
-        ]);
-        $admin->assignRole('Admin');
+
     }
 }
