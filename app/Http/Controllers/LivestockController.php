@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Livestock\MoveLivestockBatchRequest;
+use App\Http\Requests\Livestock\MoveLivestockPaddockRequest;
 use App\Http\Requests\Livestock\StoreLivestockRequest;
 use App\Http\Requests\Livestock\UpdateLivestockRequest;
-use App\Http\Requests\Livestock\MoveLivestockPaddockRequest;
-use App\Http\Requests\Livestock\MoveLivestockBatchRequest;
 use App\Http\Resources\LivestockResource;
+use App\Models\Batch;
 use App\Models\Livestock;
 use App\Models\Paddock;
-use App\Models\Batch;
-use App\Services\QueryBuilderService;
 use App\Services\LivestockMovementService;
-use Illuminate\Http\Request;
+use App\Services\QueryBuilderService;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class LivestockController extends Controller
 {
@@ -27,6 +28,8 @@ class LivestockController extends Controller
      */
     public function index(Request $request)
     {
+        Gate::authorize('viewAny', Livestock::class);
+
         $query = $this->queryBuilderService->build(Livestock::class, $request);
 
         $livestock = $query->paginate($request->get('per_page', 15))
@@ -40,6 +43,8 @@ class LivestockController extends Controller
      */
     public function store(StoreLivestockRequest $request): LivestockResource
     {
+        Gate::authorize('create', Livestock::class);
+
         $data = $request->validated();
 
         $livestock = Livestock::create($data);
@@ -52,6 +57,8 @@ class LivestockController extends Controller
      */
     public function show(Request $request, Livestock $livestock): LivestockResource
     {
+        Gate::authorize('view', $livestock);
+
         $loadedLivestock = $this->queryBuilderService->buildForModel($livestock, $request)
             ->firstOrFail();
 
@@ -63,6 +70,8 @@ class LivestockController extends Controller
      */
     public function update(UpdateLivestockRequest $request, Livestock $livestock): LivestockResource
     {
+        Gate::authorize('update', $livestock);
+
         $data = $request->validated();
 
         $livestock->update($data);
@@ -75,6 +84,8 @@ class LivestockController extends Controller
      */
     public function destroy(Livestock $livestock)
     {
+        Gate::authorize('delete', $livestock);
+
         $livestock->delete();
 
         return response(null, 204);
@@ -85,6 +96,8 @@ class LivestockController extends Controller
      */
     public function movePaddock(MoveLivestockPaddockRequest $request, Livestock $livestock): LivestockResource
     {
+        Gate::authorize('register-batch-movements');
+
         $paddock = Paddock::findOrFail($request->input('paddock_id'));
         $madeAt = Carbon::parse($request->input('made_at'));
 
@@ -101,6 +114,8 @@ class LivestockController extends Controller
      */
     public function moveBatch(MoveLivestockBatchRequest $request, Livestock $livestock): LivestockResource
     {
+        Gate::authorize('register-batch-movements');
+
         $batch = Batch::findOrFail($request->input('batch_id'));
         $madeAt = Carbon::parse($request->input('made_at'));
 

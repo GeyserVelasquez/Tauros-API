@@ -5,7 +5,8 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-//use Illuminate\Support\Facades\Hash;
+
+// use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,6 +18,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            RolesAndPermissionsSeeder::class,
             LookUpTablesSeeder::class,
             PeopleSeeder::class,
             ClinicalSeeder::class,
@@ -27,9 +29,10 @@ class DatabaseSeeder extends Seeder
             MovementKardexSeeder::class,
         ]);
 
-        User::factory()->create([
+        $admin = User::factory()->create([
             'name' => 'Administrator',
             'email' => 'admin@llanos.com',
         ]);
+        $admin->assignRole('Admin');
     }
 }
